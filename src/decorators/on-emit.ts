@@ -1,5 +1,5 @@
 import { RestClient } from '../rest-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 /**
  * Called just before emitting the request, used to add functions to the observable

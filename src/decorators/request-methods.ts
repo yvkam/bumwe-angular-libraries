@@ -1,5 +1,4 @@
 import { methodBuilder } from '../builders/request-builder';
-import { RestClient } from "../rest-client";
 
 export enum RequestMethod {
 

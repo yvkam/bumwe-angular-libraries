@@ -3,11 +3,13 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "declaration": false,
-    "removeComments": true,
     "noLib": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "declaration": true,
+    "removeComments": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "isolatedModules": false,
     "lib": [
       "es2015",
       "dom",
@@ -31,7 +33,7 @@
     ]
   },
   "files": [
-    "gulpfile.ts",
+    "gulpfile.ts"
   ],
   "exclude": [
     "desktop",

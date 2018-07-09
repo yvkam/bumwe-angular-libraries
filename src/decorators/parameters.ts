@@ -49,7 +49,7 @@ export function paramBuilder( paramName: string ) {
           }
         }
       }
-      var metadataKey   = `${propertyKey}_${paramName}_parameters`;
+      var metadataKey   = `${<string>propertyKey}_${paramName}_parameters`;
       var paramObj: any = {
         key: name,
         parameterIndex: parameterIndex,

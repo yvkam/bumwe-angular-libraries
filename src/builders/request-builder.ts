@@ -1,16 +1,8 @@
-import {
-  HttpClient, HttpEvent,
-  HttpHeaders as AngularHeaders,
-  HttpParams,
-  HttpRequest,
-  HttpResponse
-} from '@angular/common/http';
-
-import { RestClient } from '../rest-client';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/timeout';
+import { HttpClient, HttpEvent, HttpHeaders as AngularHeaders, HttpParams, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map, timeout } from 'rxjs/operators';
 import { Format } from '../decorators/parameters';
+import { RestClient } from '../rest-client';
 
 export function methodBuilder( method: string ) {
   return function ( url: string ) {
@@ -168,31 +160,34 @@ export function methodBuilder( method: string ) {
         }
 
         // Build Request
-        let req: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
+        let request: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
           headers: headers,
           params: search,
           withCredentials: true
         } );
 
         // intercept the request
-        this.requestInterceptor( req );
+        request = this.requestInterceptor( request );
         // make the request and store the observable for later transformation
-        let observable: Observable<HttpEvent<any>> = (<HttpClient>this.httpClient).request( req );
+        let observable: Observable<HttpEvent<any>> = (<HttpClient>this.httpClient).request( request );
 
         // transform the observable in accordance to the @Produces decorator
         if ( descriptor.mime ) {
-          observable = observable.map( descriptor.mime );
+          observable = observable.pipe(map( descriptor.mime ));
         }
+
         if ( descriptor.timeout ) {
-          descriptor.timeout.forEach( ( timeout: number ) => {
-            observable = observable.timeout( timeout );
+          descriptor.timeout.forEach( ( duration: number ) => {
+            observable = observable.pipe(timeout( duration ));
           } );
         }
+
         if ( descriptor.mappers ) {
           descriptor.mappers.forEach( ( mapper: ( resp: any ) => any ) => {
-            observable = observable.map( mapper );
+            observable = observable.pipe(map( mapper ));
           } );
         }
+
         if ( descriptor.emitters ) {
           descriptor.emitters.forEach( ( handler: ( resp: Observable<any> ) => Observable<any> ) => {
             observable = handler( observable );

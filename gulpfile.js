@@ -6,13 +6,12 @@ var del = require('del');
 var typescript = require('gulp-typescript');
 var async = require('async');
 var merge = require('merge2');
-var replace = require('gulp-replace');
 var fs = require('fs');
 var Gaze = require('gaze').Gaze;
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var vinylPaths = require('vinyl-paths');
-var tsConfig = require('./src/tsconfig.json');
+var tsConfig = require('./tsconfig.json');
 
 var settings = {
   distFolder: 'dist',
@@ -134,22 +133,24 @@ function _compileChangedTypescript(event, src) {
 }
 
 function _compileTypescriptFromSrc(srcArray, cb) {
-  gutil.log("Starting", gutil.colors.cyan('_compileTypescriptFromSrc'), "for file(s)", gutil.colors.magenta(srcArray));
+    gutil.log("Starting", gutil.colors.cyan('_compileTypescriptFromSrc'), "for file(s)", gutil.colors.magenta(srcArray));
 
-  var compilerOptions = settings.tsConfig.compilerOptions;
+    var compilerOptions = settings.tsConfig.compilerOptions;
 
-  //if we changed 1 file its not needed to compile the whole source code
-  if (srcArray.length == 1 && srcArray[0].slice(-2) == "ts") {
-    compilerOptions['isolatedModules'] = true;
-  }
+    //if we changed 1 file its not needed to compile the whole source code
+    if (srcArray.length == 1 && srcArray[0].slice(-2) == "ts") {
+      compilerOptions['isolatedModules'] = true;
+    }
 
-  var tsProject = typescript.createProject(compilerOptions);
-  var tsResult = gulp.src(srcArray)
-    .pipe(tsProject());
-  merge([
-    tsResult.dts.pipe(gulp.dest(settings.distFolder)),
-    tsResult.js.pipe(gulp.dest(settings.distFolder))
-  ]).on('finish', function () {
+    var tsProject = typescript.createProject(compilerOptions);
+    var tsResult = gulp.src(srcArray)
+      .pipe(tsProject());
+
+    merge([
+      tsResult.dts.pipe(gulp.dest(settings.distFolder)),
+      tsResult.js.pipe(gulp.dest(settings.distFolder))
+    ]).on('finish', function () {
+
     gutil.log('Finished ', gutil.colors.cyan('_compileTypescriptFromSrc'));
     cb();
   });

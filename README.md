@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/steven166/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/steven166/angular-rest-client)
 
 # angular-rest-client
-Angular 5 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
+Angular 6 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
 This package is production ready.
 
 ## Installation
@@ -180,19 +180,19 @@ Default value is ``Format.CSV``.
 
 # Contributors
 
-Brought to you by many contributors, including:  
-  
-TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)  
-Yavin Five  
-deblockt  
-Dmitry-Gorbenko  
-Maxxton Group  [http://www.maxxton.com](http://www.maxxton.com)  
-Domonkos Pal : Paldom  
-Discountrobot  
-TN-Kirontech  
-LeFinc  
-mmrath  [http://www.mmrath.com](http://www.mmrath.com)  
-steven166  
+Brought to you by many contributors, including:
+
+TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)
+Yavin Five
+deblockt
+Dmitry-Gorbenko
+Maxxton Group  [http://www.maxxton.com](http://www.maxxton.com)
+Domonkos Pal : Paldom
+Discountrobot
+TN-Kirontech
+LeFinc
+mmrath  [http://www.mmrath.com](http://www.mmrath.com)
+steven166
 Mayur Patel : mayur-novus
 
 # License

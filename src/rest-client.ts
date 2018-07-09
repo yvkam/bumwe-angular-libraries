@@ -1,16 +1,16 @@
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 /**
- * Angular 4 RestClient class.
+ * Angular 6 RestClient class.
  *
  * @class RestClient
  * @constructor
  */
 export class RestClient {
-
-  public constructor(private httpClient: HttpClient) {
-  }
+  public constructor(
+    protected httpClient: HttpClient
+  ) {}
 
   public getServiceId(): string {
     return null;
@@ -28,21 +28,20 @@ export class RestClient {
    * Request Interceptor
    *
    * @method requestInterceptor
-   * @param {HttpRequest} req - request object
+   * @param {HttpRequest} request - request object
    */
-  protected requestInterceptor(req: HttpRequest<any>):void {
-    //
+  protected requestInterceptor(request: HttpRequest<any>): HttpRequest<any> {
+    return request;
   }
 
   /**
    * Response Interceptor
    *
    * @method responseInterceptor
-   * @param {HttpResponse} res - response object
+   * @param {HttpResponse} response - response object
    * @returns {any} res - transformed response object
    */
-  protected responseInterceptor(res: Observable<HttpResponse<any>>): Observable<any> {
-    return res;
+  protected responseInterceptor(response: Observable<HttpResponse<any>>): Observable<any> {
+    return response;
   }
-
 }
