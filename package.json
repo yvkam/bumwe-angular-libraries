@@ -1,6 +1,6 @@
 {
   "name": "angular6-rest-client",
-  "version": "2.6.0",
+  "version": "2.6.3",
   "description": "Angular 6 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {

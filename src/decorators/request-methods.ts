@@ -1,7 +1,7 @@
 import { methodBuilder } from '../builders/request-builder';
+import { RestClient } from '../rest-client';
 
 export enum RequestMethod {
-
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
@@ -10,54 +10,53 @@ export enum RequestMethod {
   HEAD = "HEAD",
   OPTIONS = "OPTIONS",
   JSONP = "JSONP"
-
 };
 
 /**
  * Get method
  * @param {string} url - resource url of the method
  */
-export var Get = methodBuilder( RequestMethod.GET );
+export var Get: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.GET );
 
 /**
  * Post method
  * @param {string} url - resource url of the method
  */
-export var Post = methodBuilder( RequestMethod.POST );
+export var Post: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.POST );
 
 /**
  * Put method
  * @param {string} url - resource url of the method
  */
-export var Put = methodBuilder( RequestMethod.PUT );
+export var Put: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.PUT );
 
 /**
  * Patch method
  * @param {string} url - resource url of the method
  */
-export var Patch = methodBuilder( RequestMethod.PATCH );
+export var Patch: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.PATCH );
 
 /**
  * Delete method
  * @param {string} url - resource url of the method
  */
-export var Delete = methodBuilder( RequestMethod.DELETE );
+export var Delete: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.DELETE );
 
 /**
  * Head method
  * @param {string} url - resource url of the method
  */
-export var Head = methodBuilder( RequestMethod.HEAD );
+export var Head: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.HEAD );
 
 /**
  * Options method
  * @param {string} url - resource url of the method
  */
-export var Options = methodBuilder( RequestMethod.OPTIONS );
+export var Options: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.OPTIONS );
 
 /**
  * JSONP method
  * @param {string} url - resource url of the method
  */
-export var JsonP = methodBuilder( RequestMethod.JSONP );
+export var JsonP: ( url: string ) => ( target: RestClient, propertyKey: string, descriptor: any ) => any = methodBuilder( RequestMethod.JSONP );
 
