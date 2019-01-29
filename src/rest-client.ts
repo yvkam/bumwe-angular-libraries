@@ -18,11 +18,11 @@ export class RestClient {
 
   public getBaseUrl(): string {
     return null;
-  };
+  }
 
   public getDefaultHeaders(): Object {
     return null;
-  };
+  }
 
   /**
    * Request Interceptor

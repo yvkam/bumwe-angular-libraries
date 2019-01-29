@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpHeaders as AngularHeaders, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders as AngularHeaders, HttpParams, HttpRequest, HttpEventType } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, timeout } from 'rxjs/operators';
 import { Format } from '../decorators/parameters';
@@ -163,7 +163,7 @@ export function methodBuilder( method: string ) {
         let request: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
           headers: headers,
           params: search,
-          withCredentials: true
+          withCredentials: false
         } );
 
         // intercept the request
@@ -197,7 +197,19 @@ export function methodBuilder( method: string ) {
         // intercept the response
         observable = this.responseInterceptor( observable );
 
-        return observable;
+        // handle responses
+        const response = new Observable<any>(observer => {
+          observable.subscribe(resp => {
+            if (resp.type === HttpEventType.Response) {
+              observer.next(resp.body);
+              observer.complete();
+            }
+          }, err => {
+            observer.error(err);
+          });
+        });
+
+        return response;
       };
 
       return descriptor;

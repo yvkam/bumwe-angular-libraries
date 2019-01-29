@@ -1,5 +1,5 @@
 {
-  "name": "angular6-rest-client",
+  "name": "angular7-rest-client",
   "version": "7.2.2",
   "description": "Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",

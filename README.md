@@ -9,11 +9,11 @@ This package is production ready.
 ## Installation
 
 ```sh
-yarn add angular-rest-client
+yarn add angular7-rest-client
 ```
 or
 ```sh
-npm install angular-rest-client --save
+npm install angular7-rest-client --save
 ```
 
 ## Example

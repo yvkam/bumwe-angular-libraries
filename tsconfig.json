@@ -24,6 +24,7 @@
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
     "noFallthroughCasesInSwitch": true,
+    "outDir": "./dist",
     "typeRoots": [
       "./node_modules/@types",
       "./node_modules"
@@ -32,9 +33,6 @@
       "node"
     ]
   },
-  "files": [
-    "gulpfile.js"
-  ],
   "exclude": [
     "desktop",
     "node_modules",
