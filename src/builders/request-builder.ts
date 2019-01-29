@@ -115,9 +115,9 @@ export function methodBuilder( method: string ) {
         for ( let k in descriptor.headers ) {
           if ( descriptor.headers.hasOwnProperty( k ) ) {
             if ( headers.has( k ) ) {
-              headers = headers.append( k, descriptor.headers[ k ] + "" );
+              headers = headers.append( k, descriptor.headers[ k ] + '' );
             } else {
-              headers = headers.set( k, descriptor.headers[ k ] + "" );
+              headers = headers.set( k, descriptor.headers[ k ] + '' );
             }
           }
         }
@@ -151,9 +151,9 @@ export function methodBuilder( method: string ) {
                 }
               }
               if ( Array.isArray( value ) ) {
-                value.forEach( v => headers = headers.append( pHeader[ k ].key, v + "" ) );
+                value.forEach( v => headers = headers.append( pHeader[ k ].key, v + '' ) );
               } else {
-                headers = headers.append( pHeader[ k ].key, value + "");
+                headers = headers.append( pHeader[ k ].key, value + '');
               }
             }
           }

@@ -1,7 +1,7 @@
 {
   "name": "angular6-rest-client",
-  "version": "2.6.3",
-  "description": "Angular 6 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
+  "version": "7.2.2",
+  "description": "Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {
     "setup": "yarn --freeze-lockfile",
@@ -32,21 +32,21 @@
   },
   "homepage": "https://github.com/mobilunity-user/angular-rest-client#readme",
   "dependencies": {
-    "@angular/common": "^6.0.4",
-    "@angular/core": "^6.0.4",
-    "@angular/platform-browser": "^6.0.4",
-    "rxjs": "^6.2.0",
-    "zone.js": "^0.8.26"
+    "@angular/common": "^7.2.2",
+    "@angular/core": "^7.2.2",
+    "@angular/platform-browser": "^7.2.2",
+    "rxjs": "^6.3.3",
+    "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular/compiler": "^6.0.4",
-    "@types/chai": "^4.1.4",
-    "@types/jasmine": "^2.8.8",
-    "@types/node": "^10.5.2",
+    "@angular/compiler": "^7.2.2",
+    "@types/chai": "^4.1.7",
+    "@types/jasmine": "^3.3.8",
+    "@types/node": "^10.12.19",
     "async": "^2.6.1",
-    "chai": "^4.1.2",
-    "codecov": "^3.0.4",
-    "codelyzer": "^4.4.2",
+    "chai": "^4.2.0",
+    "codecov": "^3.1.0",
+    "codelyzer": "^4.5.0",
     "del": "^3.0.0",
     "gaze": "^1.1.3",
     "gulp": "^3.9.1",
@@ -58,8 +58,8 @@
     "gulp-util": "^3.0.8",
     "merge2": "^1.2.2",
     "ts-node": "^7.0.0",
-    "tslint": "^5.10.0",
-    "typescript": "^2.9.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4",
     "vinyl-paths": "^2.1.0"
   }
 }

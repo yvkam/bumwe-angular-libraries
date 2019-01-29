@@ -2,7 +2,7 @@ import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 /**
- * Angular 6 RestClient class.
+ * Angular 7 RestClient class.
  *
  * @class RestClient
  * @constructor

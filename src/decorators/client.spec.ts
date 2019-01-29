@@ -1,6 +1,6 @@
 
 import {assert} from 'chai';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
@@ -11,7 +11,7 @@ describe('@Client', () => {
   it('verify decorator attributes are added to the request', () => {
     // Arrange
     let requestMock = new HttpMock((req: HttpRequest<any>) => {
-      return Observable.of(new HttpResponse<any>({status: 200}));
+      return of(new HttpResponse<any>({status: 200}));
     });
     let testClient = new TestClient(requestMock);
 

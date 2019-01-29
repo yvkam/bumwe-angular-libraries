@@ -33,7 +33,7 @@
     ]
   },
   "files": [
-    "gulpfile.ts"
+    "gulpfile.js"
   ],
   "exclude": [
     "desktop",
