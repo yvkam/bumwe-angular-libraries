@@ -1,14 +1,13 @@
 {
   "name": "angular7-rest-client",
-  "version": "7.2.3",
+  "version": "7.2.5",
   "description": "Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {
     "setup": "yarn --freeze-lockfile",
     "test": "node_modules/.bin/gulp test",
     "watch": "node_modules/.bin/gulp default",
-    "codecov": "./node_modules/.bin/codecov",
-    "prepublish": "node_modules/.bin/gulp prepublish"
+    "codecov": "./node_modules/.bin/codecov"
   },
   "repository": {
     "type": "git",
@@ -32,14 +31,14 @@
   },
   "homepage": "https://github.com/mobilunity-user/angular-rest-client#readme",
   "dependencies": {
-    "@angular/common": "^7.2.3",
-    "@angular/core": "^7.2.3",
-    "@angular/platform-browser": "^7.2.3",
+    "@angular/common": "^7.2.5",
+    "@angular/core": "^7.2.5",
+    "@angular/platform-browser": "^7.2.5",
     "rxjs": "^6.4.0",
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular/compiler": "^7.2.3",
+    "@angular/compiler": "^7.2.5",
     "@types/chai": "^4.1.7",
     "@types/jasmine": "^3.3.8",
     "@types/node": "^10.12.21",
@@ -54,7 +53,7 @@
     "gulp-istanbul": "^1.1.3",
     "gulp-mocha": "^6.0.0",
     "gulp-replace": "^1.0.0",
-    "gulp-typescript": "^5.0.0-alpha.3",
+    "gulp-typescript": "^5.0.1",
     "gulp-util": "^3.0.8",
     "merge2": "^1.2.2",
     "ts-node": "^7.0.0",

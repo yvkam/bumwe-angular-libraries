@@ -24,6 +24,10 @@ export class RestClient {
     return null;
   }
 
+  public isWithCredentials(): boolean {
+    return false;
+  }
+
   /**
    * Request Interceptor
    *

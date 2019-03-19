@@ -163,7 +163,7 @@ export function methodBuilder( method: string ) {
         let request: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
           headers: headers,
           params: search,
-          withCredentials: false
+          withCredentials: this.isWithCredentials()
         } );
 
         // intercept the request
