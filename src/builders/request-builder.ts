@@ -38,6 +38,7 @@ export function methodBuilder( method: string ) {
           }
           body = value;
         }
+
         // Path
         let resUrl: string = url;
         if ( pPath ) {
@@ -182,12 +183,6 @@ export function methodBuilder( method: string ) {
           } );
         }
 
-        if ( descriptor.mappers ) {
-          descriptor.mappers.forEach( ( mapper: ( resp: any ) => any ) => {
-            observable = observable.pipe(map( mapper ));
-          } );
-        }
-
         if ( descriptor.emitters ) {
           descriptor.emitters.forEach( ( handler: ( resp: Observable<any> ) => Observable<any> ) => {
             observable = handler( observable );
@@ -198,7 +193,7 @@ export function methodBuilder( method: string ) {
         observable = this.responseInterceptor( observable );
 
         // handle responses
-        const response = new Observable<any>(observer => {
+        let response = new Observable<any>(observer => {
           observable.subscribe(resp => {
             if (resp.type === HttpEventType.Response) {
               observer.next(resp.body);
@@ -208,6 +203,13 @@ export function methodBuilder( method: string ) {
             observer.error(err);
           });
         });
+
+        // changed: mappers should map response only
+        if ( descriptor.mappers ) {
+          descriptor.mappers.forEach( ( mapper: ( resp: any ) => any ) => {
+            response = response.pipe(map( mapper ));
+          } );
+        }
 
         return response;
       };
