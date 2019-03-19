@@ -61,7 +61,7 @@ export class TodoClient extends RestClient {
 
     @Get("todo/{id}")
     @Timeout(2000) //In milliseconds
-    @Map(resp => new Todo(resp.json()))
+    @Map(resp => new Todo(resp))
     public getTodoById( @Path("id") id: number): Observable<Todo>{ return null; };
 
     @Post("todo")
@@ -102,12 +102,12 @@ export class AppModule { }
 **```todo.component.ts```**
 ``` ts
 // You need some or all of the following rxjs imports for Promise and Observable.
-import 'rxjs/add/observable/defer';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/timeout';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/defer'; // deprecated
+import 'rxjs/add/observable/throw'; // deprecated
+import 'rxjs/add/operator/map'; // deprecated
+import 'rxjs/add/operator/timeout'; // deprecated
+import 'rxjs/add/operator/toPromise'; // deprecated
+import { Observable } from 'rxjs/Observable'; // deprecated
 
 @Component({
   selector: 'to-do',
