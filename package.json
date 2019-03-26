@@ -1,6 +1,6 @@
 {
   "name": "angular7-rest-client",
-  "version": "7.2.5",
+  "version": "7.2.10",
   "description": "Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {
@@ -31,14 +31,14 @@
   },
   "homepage": "https://github.com/mobilunity-user/angular-rest-client#readme",
   "dependencies": {
-    "@angular/common": "^7.2.5",
-    "@angular/core": "^7.2.5",
-    "@angular/platform-browser": "^7.2.5",
+    "@angular/common": "^7.2.10",
+    "@angular/core": "^7.2.10",
+    "@angular/platform-browser": "^7.2.10",
     "rxjs": "^6.4.0",
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular/compiler": "^7.2.5",
+    "@angular/compiler": "^7.2.10",
     "@types/chai": "^4.1.7",
     "@types/jasmine": "^3.3.8",
     "@types/node": "^10.12.21",

@@ -2,6 +2,10 @@
 [![Build Status](https://travis-ci.org/steven166/angular-rest-client.svg?branch=master)](https://travis-ci.org/steven166/angular-rest-client)
 [![codecov](https://codecov.io/gh/steven166/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/steven166/angular-rest-client)
 
+# Update (26/03/2019)
+Inserted "PlainQuery" (I didn't find a better name... sorry)
+
+
 # angular-rest-client
 Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
 This package is production ready.
@@ -23,7 +27,7 @@ npm install angular7-rest-client --save
 import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import {
-  HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType
+  HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, PlainQuery, Produces, MediaType
 } from 'angular-rest-client';
 
 import { Todo } from './models/Todo';
@@ -57,7 +61,7 @@ export class TodoClient extends RestClient {
     @Get("todo/")
     @Timeout(2000) //In milliseconds
     @Produces(MediaType.JSON)
-    public getTodos( @Query("page") page:number, @Query("size", {default: 20}) size?:number, @Query("sort") sort?: string): Observable<Todo[]> { return null; };
+    public getTodos( @Query("page") page:number, @Query("size", {default: 20}) size?:number, @Query("sort") sort?: string): Observable<Todo[]> { return null;
 
     @Get("todo/{id}")
     @Timeout(2000) //In milliseconds
@@ -79,6 +83,20 @@ export class TodoClient extends RestClient {
     @Timeout(2000) //In milliseconds
     public deleteTodoById( @Path("id") id: string): Observable<Response> { return null; };
 }
+```
+
+### Using PlainQuery property
+
+```ts
+    export interface PageFilterQuery {
+      skip?: number;
+      top?: top;
+    }
+
+    @Get("todo/{id}")
+    @Timeout(2000) //In milliseconds
+    @Map(resp => new Todo(resp))
+    public getTodoById( @Path("id") id: number, @PlainBody filter?: PageFilterQuery ): Observable<Todo>{ return null; };
 ```
 
 ### Using it in your component
@@ -163,9 +181,11 @@ export class ToDoCmp {
 - `@Timeout(timeout: number)`
 
 ### Parameter decorators:
-- `@Path(name: string, value?:any|{value?:any})`
-- `@Query(name: string, value?:any|{value?:any,format?:string})`
-- `@Header(name: string, value?:any|{value?:any,format?:string})`
+- `@Path(name: string, options?: {defaultValue?:any})`
+- `@Header(name: string, options?: {defaultValue?:any, format?:string})`
+- `@Query(name: string, options?: {defaultValue?:any, format?:string})`
+- `@PlainQuery`
+- `@PlainBody`
 - `@Body`
 
 #### Collection Format
