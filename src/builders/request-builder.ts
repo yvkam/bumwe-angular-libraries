@@ -8,11 +8,12 @@ export function methodBuilder( method: string ) {
   return function ( url: string ) {
     return function ( target: RestClient, propertyKey: string, descriptor: any ) {
 
-      let pPath      = target[ `${propertyKey}_Path_parameters` ];
-      let pQuery     = target[ `${propertyKey}_Query_parameters` ];
-      let pBody      = target[ `${propertyKey}_Body_parameters` ];
-      let pPlainBody = target[ `${propertyKey}_PlainBody_parameters` ];
-      let pHeader    = target[ `${propertyKey}_Header_parameters` ];
+      let pPath       = target[ `${propertyKey}_Path_parameters` ];
+      let pQuery      = target[ `${propertyKey}_Query_parameters` ];
+      let pPlainQuery = target[ `${propertyKey}_PlainQuery_parameters` ];
+      let pBody       = target[ `${propertyKey}_Body_parameters` ];
+      let pPlainBody  = target[ `${propertyKey}_PlainBody_parameters` ];
+      let pHeader     = target[ `${propertyKey}_Header_parameters` ];
 
       descriptor.value = function ( ...args: any[] ) {
 
@@ -23,7 +24,7 @@ export function methodBuilder( method: string ) {
             throw new Error( 'Only one @Body is allowed' );
           }
           let value = args[ pBody[ 0 ].parameterIndex ];
-          if ( value === undefined && pBody[ 0 ].value !== undefined ) {
+          if ( !value && pBody[ 0 ].value ) {
             value = pBody[ 0 ].value;
           }
           body = JSON.stringify( value );
@@ -33,7 +34,7 @@ export function methodBuilder( method: string ) {
             throw new Error( 'Only one @Body is allowed' );
           }
           let value = args[ pPlainBody[ 0 ].parameterIndex ];
-          if ( value === undefined && pPlainBody[ 0 ].value !== undefined ) {
+          if ( !value && pPlainBody[ 0 ].value ) {
             value = pPlainBody[ 0 ].value;
           }
           body = value;
@@ -45,10 +46,10 @@ export function methodBuilder( method: string ) {
           for ( let k in pPath ) {
             if ( pPath.hasOwnProperty( k ) ) {
               let value: any = args[ pPath[ k ].parameterIndex ];
-              if ( value === undefined && pPath[ k ].value !== undefined ) {
+              if ( !value && pPath[ k ].value ) {
                 value = pPath[ k ].value;
               }
-              if ( value !== undefined && value !== null ) {
+              if ( value && value !== null ) {
                 resUrl = resUrl.replace( '{' + pPath[ k ].key + '}', value );
               } else {
                 throw new Error( 'Missing path variable \'' + pPath[ k ].key + '\' in url ' + url );
@@ -68,11 +69,11 @@ export function methodBuilder( method: string ) {
         let search: HttpParams = new HttpParams();
         if ( pQuery ) {
           pQuery
-            .filter( ( p: any ) => args[ p.parameterIndex ] !== undefined || p.value !== undefined ) // filter out optional parameters
+            .filter( ( p: any ) => args[ p.parameterIndex ] || p.value ) // filter out optional parameters
             .forEach( ( p: any ) => {
               let key        = p.key;
               let value: any = args[ p.parameterIndex ];
-              if ( value === undefined && p.value !== undefined ) {
+              if ( !value && p.value ) {
                 value = p.value;
               }
 
@@ -107,6 +108,19 @@ export function methodBuilder( method: string ) {
               }
             } );
         }
+        if ( pPlainQuery ) {
+          pPlainQuery
+            .filter( ( p: any ) => args[ p.parameterIndex ] ) // filter out optional parameters
+            .forEach( ( p: any ) => {
+              let value: any = args[ p.parameterIndex ];
+
+              if ( value instanceof Object ) {
+                Object.keys(value).forEach( key => search = search.append( key, value[key] ) );
+              } else {
+                throw new Error( 'Value is not an Object' );
+              }
+            } );
+        }
 
         // Headers
         // set class default headers
@@ -127,7 +141,7 @@ export function methodBuilder( method: string ) {
           for ( let k in pHeader ) {
             if ( pHeader.hasOwnProperty( k ) ) {
               let value: any = args[ pHeader[ k ].parameterIndex ];
-              if ( value === undefined && pHeader[ k ].value !== undefined ) {
+              if ( !value && pHeader[ k ].value ) {
                 value = pHeader[ k ].value;
               }
               if ( Array.isArray( value ) ) {

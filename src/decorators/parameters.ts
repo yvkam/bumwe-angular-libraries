@@ -32,22 +32,23 @@ export const Format = {
 };
 
 export function paramBuilder( paramName: string ) {
-  return function ( name: string, value?: any | { value?: any, format?: string } ) {
+  return function ( name: string, options?: { defaultValue?: any, format?: string } ) {
     return function ( target: RestClient, propertyKey: string | symbol, parameterIndex: number ) {
       let format;
-      if ( value ) {
-        if ( typeof(value) === 'object' ) {
-          if ( value.value !== undefined && value.value !== null ) {
-            value = value.value;
-          }
-          if ( value.format !== undefined && value.format !== null ) {
-            if ( Format[ value.format ] !== undefined ) {
-              format = value.format;
-            } else {
-              throw new Error( 'Unknown Collection Format: \'' + value.format + '\'' );
-            }
+      let value;
+      if ( options ) {
+        if ( options.defaultValue ) {
+          value = options.defaultValue;
+        }
+        if ( options.format ) {
+          if ( Format[ options.format ] ) {
+            format = options.format;
+          } else {
+            throw new Error( 'Unknown Collection Format: \'' + options.format + '\'' );
           }
         }
+      } else {
+        value = options;
       }
       var metadataKey   = `${<string>propertyKey}_${paramName}_parameters`;
       var paramObj: any = {
@@ -76,6 +77,11 @@ export const Path = paramBuilder( 'Path' );
  * @param {string} key - query key to bind value
  */
 export const Query = paramBuilder( 'Query' );
+
+/**
+ * Query value of a method's url, type: key-value pair object
+ */
+export const PlainQuery = paramBuilder( 'PlainQuery' )( 'PlainQuery' );
 
 /**
  * Body of a REST method, type: key-value pair object
