@@ -202,11 +202,6 @@ export function methodBuilder( method: string ) {
           } );
         }
 
-        // transform the observable in accordance to the @Produces decorator
-        if ( descriptor.mime ) {
-          observable = observable.pipe(map( descriptor.mime ));
-        }
-
         // timeout
         if ( descriptor.timeout ) {
           descriptor.timeout.forEach( ( duration: number ) => {
