@@ -1,6 +1,6 @@
 {
   "name": "angular7-rest-client",
-  "version": "7.2.15",
+  "version": "7.3.0",
   "description": "Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mobilunity-user/angular-rest-client.git"
+    "url": "git+https://github.com/rosostolato/angular-rest-client.git"
   },
   "keywords": [
     "angular7",
@@ -27,9 +27,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mobilunity-user/angular-rest-client/issues"
+    "url": "https://github.com/rosostolato/angular-rest-client/issues"
   },
-  "homepage": "https://github.com/mobilunity-user/angular-rest-client#readme",
+  "homepage": "https://github.com/rosostolato/angular-rest-client#readme",
   "dependencies": {
     "@angular/common": "^7.2.15",
     "@angular/core": "^7.2.15",

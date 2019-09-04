@@ -1,9 +1,20 @@
 [![npm version](https://badge.fury.io/js/angular-rest-client.svg)](https://badge.fury.io/js/angular-rest-client)
-[![Build Status](https://travis-ci.org/steven166/angular-rest-client.svg?branch=master)](https://travis-ci.org/steven166/angular-rest-client)
-[![codecov](https://codecov.io/gh/steven166/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/steven166/angular-rest-client)
+[![Build Status](https://travis-ci.org/rosostolato/angular-rest-client.svg?branch=master)](https://travis-ci.org/rosostolato/angular-rest-client)
+[![codecov](https://codecov.io/gh/rosostolato/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/rosostolato/angular-rest-client)
 
-# Update (26/03/2019)
-Inserted "PlainQuery" (I didn't find a better name... sorry)
+# Update (2019-09-04) - v7.2.0
+> **WARNING**: Version 7.2.0 is a big update that can break codes.
+
+On this last build, I...
+- fixed some bugs;
+- fixed all spec files and now all tests are passing;
+- removed `@Produces` decorator.
+
+The reason that I removed `@Produces` is that now the default response will always be `resp.body`. If you still need to get the entire `HttpResponse`, you should use `ResponseInterceptor` method.
+
+# Update (2019-03-26)
+- Inserted `PlainQuery` (Query as object)
+- Added `withCredentials` on Client decorator
 
 
 # angular-rest-client
@@ -27,7 +38,7 @@ npm install angular7-rest-client --save
 import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import {
-  HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, PlainQuery, Produces, MediaType
+  HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, PlainQuery, MediaType
 } from 'angular-rest-client';
 
 import { Todo } from './models/Todo';
@@ -60,7 +71,6 @@ export class TodoClient extends RestClient {
 
     @Get("todo/")
     @Timeout(2000) //In milliseconds
-    @Produces(MediaType.JSON)
     public getTodos( @Query("page") page:number, @Query("size", {default: 20}) size?:number, @Query("sort") sort?: string): Observable<Todo[]> { return null;
 
     @Get("todo/{id}")
@@ -73,15 +83,15 @@ export class TodoClient extends RestClient {
     @Headers({
         'content-type': 'application/json'
     })
-    public postTodo( @Body todo: Todo): Observable<Response> { return null; };
+    public postTodo( @Body todo: Todo): Observable<Todo> { return null; };
 
     @Put("todo/{id}")
     @Timeout(2000) //In milliseconds
-    public putTodoById( @Path("id") id: string, @Body todo: Todo): Observable<Response> { return null; };
+    public putTodoById( @Path("id") id: string, @Body todo: Todo): Observable<Todo> { return null; };
 
     @Delete("todo/{id}")
     @Timeout(2000) //In milliseconds
-    public deleteTodoById( @Path("id") id: string): Observable<Response> { return null; };
+    public deleteTodoById( @Path("id") id: string): Observable<Todo> { return null; };
 }
 ```
 
@@ -145,7 +155,7 @@ export class ToDoCmp {
   // Another example, using Promises.
   sampleUsage2() {
     this.todoClient.getTodos( /* page */ 1).toPromise()
-      .then((response: Response) => console.log(response.json()))
+      .then((response: Response) => console.log(response))
       .catch(this.handleError);
     })
   }
@@ -166,7 +176,7 @@ export class ToDoCmp {
 - `getDefaultHeaders(): Object`: returns the default headers of RestClient in a key-value pair
 
 ### Class decorators:
-- `@Client(args:{serviceId?: string, baseUrl?: string, headers?: any})`
+- `@Client(args:{serviceId?: string, baseUrl?: string, headers?: any, withCredentials?: boolean})`
 
 ### Method decorators:
 - `@Get(url: String)`
@@ -176,14 +186,14 @@ export class ToDoCmp {
 - `@Delete(url: String)`
 - `@Head(url: String)`
 - `@Headers(headers: Object)`
-- `@Map(mapper:(resp : any)=>any)`
-- `@OnEmit(emitter:(resp : Observable<any>)=>Observable<any>)`
+- `@Map(mapper:(resp : any) => any)`
+- `@OnEmit(emitter:(resp : Observable<any>) => Observable<any>)`
 - `@Timeout(timeout: number)`
 
 ### Parameter decorators:
-- `@Path(name: string, options?: {defaultValue?:any})`
-- `@Header(name: string, options?: {defaultValue?:any, format?:string})`
-- `@Query(name: string, options?: {defaultValue?:any, format?:string})`
+- `@Path(name: string, options?: string|{defaultValue?:any})`
+- `@Header(name: string, options?: string|{defaultValue?:any, format?:string})`
+- `@Query(name: string, options?: string|{defaultValue?:any, format?:string})`
 - `@PlainQuery`
 - `@PlainBody`
 - `@Body`
