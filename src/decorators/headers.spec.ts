@@ -53,7 +53,7 @@ describe( '@Headers', () => {
     let testClient  = new TestClient( requestMock );
 
     // Act
-    testClient.getItems();
+    let result = testClient.getItems().subscribe();
 
     // Assert
     assert.deepEqual(headers.get('accept'), 'application/json');

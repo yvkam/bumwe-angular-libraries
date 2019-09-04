@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
-import { map, timeout, filter } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, timeout, filter, mergeMap, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { RestClient } from '../rest-client';
 import { Format } from '../decorators/parameters';
 
@@ -174,17 +174,27 @@ export function methodBuilder( method: string ) {
           }
         }
 
-        // Build Request
-        let request: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
+        // intercept the request
+        let request = new HttpRequest( method, resUrl, body, {
           headers: headers,
           params: search,
           withCredentials: this.isWithCredentials()
         } );
 
-        // intercept the request
-        request = this.requestInterceptor( request );
+        let intercepted: HttpRequest<any>|Observable<HttpRequest<any>> = this.requestInterceptor( request );
+
+        if (intercepted instanceof HttpRequest) {
+          intercepted = of(request);
+        }
+
+        if (!(intercepted instanceof Observable)) {
+          throw new Error( 'RequestInterceptor should return HttpRequest|Observable<HttpRequest' );
+        }
+
         // make the request and store the observable for later transformation
-        let observable: Observable<HttpEvent<any>> = (<HttpClient>this.httpClient).request( request );
+        let observable: Observable<HttpEvent<any>> = intercepted.pipe(
+          mergeMap(req => (<HttpClient>this.httpClient).request(req))
+        );
 
         // intercept the response
         observable = this.responseInterceptor( observable );

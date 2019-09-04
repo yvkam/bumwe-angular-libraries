@@ -235,7 +235,7 @@ describe( '@Path', () => {
     } );
 
     // Act
-    testClient.getItem( 5 ).subscribe();
+    let result = testClient.getItem( 5 ).subscribe();
   } );
 
   it( 'resolve missing Path variable', () => {
@@ -247,7 +247,7 @@ describe( '@Path', () => {
 
     try {
       // Act
-      testClient.getItem();
+      let result = testClient.getItem();
 
       // Assert
       assert.fail();
@@ -273,7 +273,7 @@ describe( '@Path', () => {
     } );
 
     // Act
-    testClient.getItem2().subscribe();
+    let result = testClient.getItem2().subscribe();
 
   } );
 
@@ -292,7 +292,7 @@ describe( '@Path', () => {
     } );
 
     // Act
-    testClient.getItem3( 20, 'done' ).subscribe();
+    let result = testClient.getItem3( 20, 'done' ).subscribe();
 
   } );
 } );
@@ -314,7 +314,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItems( 5 ).subscribe();
+    let result = testClient.getItems( 5 ).subscribe();
 
   } );
 
@@ -334,7 +334,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItems().subscribe();
+    let result = testClient.getItems().subscribe();
   } );
 
   it( 'resolve default Query variable', ( done: ( e?: any ) => void ) => {
@@ -352,7 +352,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItems2().subscribe();
+    let result = testClient.getItems2().subscribe();
   } );
 
   it( 'resolve multiple Query variable', ( done: ( e?: any ) => void ) => {
@@ -370,7 +370,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItems3( 3, '20' ).subscribe();
+    let result = testClient.getItems3( 3, '20' ).subscribe();
 
   } );
 
@@ -389,7 +389,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItemsCSV( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsCSV( [ 'name', 'desc' ] ).subscribe();
 
   } );
 
@@ -408,7 +408,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItemsSSV( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsSSV( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format TSV', ( done: ( e?: any ) => void ) => {
@@ -426,7 +426,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItemsTSV( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsTSV( [ 'name', 'desc' ] ).subscribe();
 
   } );
 
@@ -445,7 +445,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItemsPIPES( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsPIPES( [ 'name', 'desc' ] ).subscribe();
 
   } );
 
@@ -464,7 +464,7 @@ describe( '@Query', () => {
     } );
 
     // Act
-    testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
   } );
 } );
 
@@ -485,7 +485,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItems( 5 ).subscribe();
+    let result = testClient.getItems( 5 ).subscribe();
 
   } );
 
@@ -504,7 +504,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItems().subscribe();
+    let result = testClient.getItems().subscribe();
   } );
 
   it( 'resolve default Header variable', ( done: ( e?: any ) => void ) => {
@@ -522,7 +522,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItems2().subscribe();
+    let result = testClient.getItems2().subscribe();
 
   } );
 
@@ -543,7 +543,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItems3( 3, '20' ).subscribe();
+    let result = testClient.getItems3( 3, '20' ).subscribe();
 
   } );
 
@@ -562,7 +562,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItemsDefault( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsDefault( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format CSV', ( done: ( e?: any ) => void ) => {
@@ -580,7 +580,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItemsCSV( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsCSV( [ 'name', 'desc' ] ).subscribe();
 
   } );
 
@@ -599,7 +599,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItemsSSV( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsSSV( [ 'name', 'desc' ] ).subscribe();
 
   } );
 
@@ -618,7 +618,7 @@ describe( '@Header', () => {
      } );
 
     // Act
-    testClient.getItemsTSV( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsTSV( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format PIPES', ( done: ( e?: any ) => void ) => {
@@ -636,7 +636,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItemsPIPES( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsPIPES( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format MULTI', ( done: ( e?: any ) => void ) => {
@@ -654,7 +654,7 @@ describe( '@Header', () => {
     } );
 
     // Act
-    testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
+    let result = testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
 
   } );
 } );
@@ -676,7 +676,7 @@ describe( '@Body', () => {
     } );
 
     // Act
-    testClient.createItem( { name: 'Awesome Item' } ).subscribe();
+    let result = testClient.createItem( { name: 'Awesome Item' } ).subscribe();
   } );
 
   it( 'resolve missing Body variable', ( done: ( e?: any ) => void ) => {
@@ -694,7 +694,7 @@ describe( '@Body', () => {
     } );
 
     // Act
-    testClient.createItem().subscribe();
+    let result = testClient.createItem().subscribe();
   } );
 
   it( 'resolve 2 Body variable', () => {

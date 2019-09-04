@@ -2,12 +2,13 @@
 [![Build Status](https://travis-ci.org/rosostolato/angular-rest-client.svg?branch=master)](https://travis-ci.org/rosostolato/angular-rest-client)
 [![codecov](https://codecov.io/gh/rosostolato/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/rosostolato/angular-rest-client)
 
-# Update (2019-09-04) - v7.2.0
-> **WARNING**: Version 7.2.0 is a big update that can break codes.
+# Update (2019-09-04) - v7.3.0
+> **WARNING**: Version 7.3.0 is a big update that can break codes.
 
 On this last build, I...
 - fixed some bugs;
 - fixed all spec files and now all tests are passing;
+- `requestInterceptor` can return a observable for async requests
 - removed `@Produces` decorator.
 
 The reason that I removed `@Produces` is that now the default response will always be `resp.body`. If you still need to get the entire `HttpResponse`, you should use `ResponseInterceptor` method.

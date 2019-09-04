@@ -55,7 +55,7 @@ describe( '@Get', () => {
     let testClient  = new TestClient( requestMock );
 
     // Act
-    testClient.getItems();
+    let result = testClient.getItems().subscribe();
 
     assert.equal( method, RequestMethod.GET );
     assert.equal( url, '/test' );
@@ -76,7 +76,7 @@ describe( '@Post', () => {
     let testClient  = new TestClient( requestMock );
 
     // Act
-    testClient.createItems();
+    let result = testClient.createItems().subscribe();
 
     assert.equal( method, RequestMethod.POST );
     assert.equal( url, '/test' );

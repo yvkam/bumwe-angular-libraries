@@ -34,7 +34,7 @@ export class RestClient {
    * @method requestInterceptor
    * @param {HttpRequest} request - request object
    */
-  protected requestInterceptor(request: HttpRequest<any>): HttpRequest<any> {
+  protected requestInterceptor(request: HttpRequest<any>): HttpRequest<any>|Observable<HttpRequest<any>> {
     return request;
   }
 
