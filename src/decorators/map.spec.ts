@@ -40,7 +40,7 @@ class TestClient extends RestClient {
   }
 
   @Get( '/test' )
-  @Map( resp => new Item( JSON.parse(resp.body) ) )
+  @Map( resp => new Item(JSON.parse(resp)))
   //@ts-ignore
   public getItems(): Observable<Item> {
     return null;
