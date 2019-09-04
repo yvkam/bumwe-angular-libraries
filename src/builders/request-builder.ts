@@ -1,8 +1,8 @@
-import { HttpClient, HttpEvent, HttpHeaders as AngularHeaders, HttpParams, HttpRequest, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
+import { map, timeout, filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { map, timeout } from 'rxjs/operators';
-import { Format } from '../decorators/parameters';
 import { RestClient } from '../rest-client';
+import { Format } from '../decorators/parameters';
 
 export function methodBuilder( method: string ) {
   return function ( url: string ) {
@@ -16,7 +16,6 @@ export function methodBuilder( method: string ) {
       let pHeader     = target[ `${propertyKey}_Header_parameters` ];
 
       descriptor.value = function ( ...args: any[] ) {
-
         // Body
         let body: any = null;
         if ( pBody ) {
@@ -73,6 +72,7 @@ export function methodBuilder( method: string ) {
             .forEach( ( p: any ) => {
               let key        = p.key;
               let value: any = args[ p.parameterIndex ];
+
               if ( !value && p.value ) {
                 value = p.value;
               }
@@ -124,7 +124,7 @@ export function methodBuilder( method: string ) {
 
         // Headers
         // set class default headers
-        let headers: AngularHeaders = new AngularHeaders( this.getDefaultHeaders() );
+        let headers: HttpHeaders = new HttpHeaders( this.getDefaultHeaders() );
 
         // set method specific headers
         for ( let k in descriptor.headers ) {
@@ -186,46 +186,42 @@ export function methodBuilder( method: string ) {
         // make the request and store the observable for later transformation
         let observable: Observable<HttpEvent<any>> = (<HttpClient>this.httpClient).request( request );
 
+        // intercept the response
+        observable = this.responseInterceptor( observable );
+
+        // map resp.body
+        observable = observable.pipe(
+          filter(resp => resp.type === HttpEventType.Response),
+          map((resp: HttpResponse<any>) => resp.body)
+        );
+
+        // mapper
+        if ( descriptor.mappers ) {
+          descriptor.mappers.forEach( ( mapper: ( resp: any ) => any ) => {
+            observable = observable.pipe(map( mapper ));
+          } );
+        }
+
         // transform the observable in accordance to the @Produces decorator
         if ( descriptor.mime ) {
           observable = observable.pipe(map( descriptor.mime ));
         }
 
+        // timeout
         if ( descriptor.timeout ) {
           descriptor.timeout.forEach( ( duration: number ) => {
             observable = observable.pipe(timeout( duration ));
           } );
         }
 
+        // emitters
         if ( descriptor.emitters ) {
           descriptor.emitters.forEach( ( handler: ( resp: Observable<any> ) => Observable<any> ) => {
             observable = handler( observable );
           } );
         }
 
-        // intercept the response
-        observable = this.responseInterceptor( observable );
-
-        // handle responses
-        let response = new Observable<any>(observer => {
-          observable.subscribe(resp => {
-            if (resp.type === HttpEventType.Response) {
-              observer.next(resp.body);
-              observer.complete();
-            }
-          }, err => {
-            observer.error(err);
-          });
-        });
-
-        // changed: mappers should map response only
-        if ( descriptor.mappers ) {
-          descriptor.mappers.forEach( ( mapper: ( resp: any ) => any ) => {
-            response = response.pipe(map( mapper ));
-          } );
-        }
-
-        return response;
+        return observable;
       };
 
       return descriptor;

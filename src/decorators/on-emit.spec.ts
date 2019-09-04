@@ -1,5 +1,5 @@
 
-import {assert} from 'chai';
+import { assert } from 'chai';
 import { map} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
@@ -42,7 +42,7 @@ class TestClient extends RestClient {
   }
 
   @Get('/test')
-  @OnEmit(obs => obs.pipe(map(resp => new Item(JSON.parse(resp.body)))))
+  @OnEmit(obs => obs.pipe(map(resp => new Item(JSON.parse(resp)))))
   // @ts-ignore
   public getItems(): Observable<Item> {
     return null;

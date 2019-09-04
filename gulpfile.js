@@ -242,7 +242,7 @@ function _preTest(cb){
 
 function _runMocha(cb) {
   return gulp.src(['dist/**/*.spec.js'], { read: false })
-    .pipe(mocha({ reporter: 'list' }))
+    .pipe(mocha({ reporter: 'list', bail: true }))
     .pipe(istanbul.writeReports({
       // reporters: ['lcovonly']
     }))

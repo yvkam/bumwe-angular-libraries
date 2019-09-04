@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
@@ -25,8 +26,15 @@ class HttpMock extends HttpClient {
 
 class TestClientPath extends RestClient {
 
-  constructor( httpHandler: HttpClient ) {
+  constructor( httpHandler: HttpClient, private responseCallback?: (resp: any) => void ) {
     super( httpHandler );
+  }
+
+  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+    if (this.responseCallback) {
+      return resp.pipe(tap(this.responseCallback));
+    }
+    return resp;
   }
 
   @Get( '/items/{id}' )
@@ -51,8 +59,15 @@ class TestClientPath extends RestClient {
 
 class TestClientQuery extends RestClient {
 
-  constructor( httpHandler: HttpClient ) {
+  constructor( httpHandler: HttpClient, private responseCallback?: (resp: any) => void ) {
     super( httpHandler );
+  }
+
+  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+    if (this.responseCallback) {
+      return resp.pipe(tap(this.responseCallback));
+    }
+    return resp;
   }
 
   @Get( '/items' )
@@ -107,8 +122,15 @@ class TestClientQuery extends RestClient {
 
 class TestClientHeader extends RestClient {
 
-  constructor( httpHandler: HttpClient ) {
+  constructor( httpHandler: HttpClient, private responseCallback?: (resp: any) => void ) {
     super( httpHandler );
+  }
+
+  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+    if (this.responseCallback) {
+      return resp.pipe(tap(this.responseCallback));
+    }
+    return resp;
   }
 
   @Get( '/items' )
@@ -169,8 +191,15 @@ class TestClientHeader extends RestClient {
 
 class TestClientBody extends RestClient {
 
-  constructor( httpHandler: HttpClient ) {
+  constructor( httpHandler: HttpClient, private responseCallback?: (resp: any) => void ) {
     super( httpHandler );
+  }
+
+  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+    if (this.responseCallback) {
+      return resp.pipe(tap(this.responseCallback));
+    }
+    return resp;
   }
 
   @Post( '/items' )
@@ -194,13 +223,9 @@ describe( '@Path', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.url } ) );
     } );
-    let testClient  = new TestClientPath( requestMock );
 
-    // Act
-    let result = testClient.getItem( 5 );
-
-    // Assert
-    result.subscribe( resp => {
+    // assert
+    let testClient  = new TestClientPath( requestMock, resp => {
       try {
         assert.equal( resp.url, '/items/5' );
         done();
@@ -208,6 +233,9 @@ describe( '@Path', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItem( 5 ).subscribe();
   } );
 
   it( 'resolve missing Path variable', () => {
@@ -219,7 +247,7 @@ describe( '@Path', () => {
 
     try {
       // Act
-      let result = testClient.getItem();
+      testClient.getItem();
 
       // Assert
       assert.fail();
@@ -234,13 +262,8 @@ describe( '@Path', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.url } ) );
     } );
-    let testClient  = new TestClientPath( requestMock );
-
-    // Act
-    let result = testClient.getItem2();
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientPath( requestMock, resp => {
+      // Assert
       try {
         assert.equal( resp.url, '/items2/7' );
         done();
@@ -249,6 +272,9 @@ describe( '@Path', () => {
       }
     } );
 
+    // Act
+    testClient.getItem2().subscribe();
+
   } );
 
   it( 'resolve multiple Path variable', ( done: ( e?: any ) => void ) => {
@@ -256,13 +282,7 @@ describe( '@Path', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.url } ) );
     } );
-    let testClient  = new TestClientPath( requestMock );
-
-    // Act
-    let result = testClient.getItem3( 20, 'done' );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientPath( requestMock, resp => {
       try {
         assert.equal( resp.url, '/items3/20/status/status-done.json' );
         done();
@@ -270,6 +290,9 @@ describe( '@Path', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItem3( 20, 'done' ).subscribe();
 
   } );
 } );
@@ -281,13 +304,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItems( 5 );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/items?page=5' );
         done();
@@ -296,6 +313,9 @@ describe( '@Query', () => {
       }
     } );
 
+    // Act
+    testClient.getItems( 5 ).subscribe();
+
   } );
 
   it( 'resolve missing Query variable', ( done: ( e?: any ) => void ) => {
@@ -303,13 +323,8 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
+      // Assert
       try {
         assert.equal( resp.url, '/items' );
         done();
@@ -317,6 +332,9 @@ describe( '@Query', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItems().subscribe();
   } );
 
   it( 'resolve default Query variable', ( done: ( e?: any ) => void ) => {
@@ -324,13 +342,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItems2();
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/items2?page=20' );
         done();
@@ -338,6 +350,9 @@ describe( '@Query', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItems2().subscribe();
   } );
 
   it( 'resolve multiple Query variable', ( done: ( e?: any ) => void ) => {
@@ -345,13 +360,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItems3( 3, '20' );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/items3?sort=asc&size=20&page=3' );
         done();
@@ -360,6 +369,9 @@ describe( '@Query', () => {
       }
     } );
 
+    // Act
+    testClient.getItems3( 3, '20' ).subscribe();
+
   } );
 
   it( 'resolve Collection Format CSV', ( done: ( e?: any ) => void ) => {
@@ -367,13 +379,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItemsCSV( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/itemsCSV?field=name,desc' );
         done();
@@ -382,6 +388,9 @@ describe( '@Query', () => {
       }
     } );
 
+    // Act
+    testClient.getItemsCSV( [ 'name', 'desc' ] ).subscribe();
+
   } );
 
   it( 'resolve Collection Format SSV', ( done: ( e?: any ) => void ) => {
@@ -389,13 +398,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItemsSSV( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/itemsSSV?field=name%20desc' );
         done();
@@ -403,6 +406,9 @@ describe( '@Query', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItemsSSV( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format TSV', ( done: ( e?: any ) => void ) => {
@@ -410,13 +416,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItemsTSV( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/itemsTSV?field=name%09desc' );
         done();
@@ -425,6 +425,9 @@ describe( '@Query', () => {
       }
     } );
 
+    // Act
+    testClient.getItemsTSV( [ 'name', 'desc' ] ).subscribe();
+
   } );
 
   it( 'resolve Collection Format PIPES', ( done: ( e?: any ) => void ) => {
@@ -432,13 +435,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItemsPIPES( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/itemsPIPES?field=name%7Cdesc' );
         done();
@@ -447,6 +444,9 @@ describe( '@Query', () => {
       }
     } );
 
+    // Act
+    testClient.getItemsPIPES( [ 'name', 'desc' ] ).subscribe();
+
   } );
 
   it( 'resolve Collection Format MULTI', ( done: ( e?: any ) => void ) => {
@@ -454,13 +454,7 @@ describe( '@Query', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
     } );
-    let testClient  = new TestClientQuery( requestMock );
-
-    // Act
-    let result = testClient.getItemsMULTI( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientQuery( requestMock, resp => {
       try {
         assert.equal( resp.url, '/itemsMULTI?field=name&field=desc' );
         done();
@@ -469,6 +463,8 @@ describe( '@Query', () => {
       }
     } );
 
+    // Act
+    testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
   } );
 } );
 
@@ -479,13 +475,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItems( 5 );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.deepEqual( <any> resp.headers.getAll( 'page' ), [ '5' ] );
         done();
@@ -494,6 +484,9 @@ describe( '@Header', () => {
       }
     } );
 
+    // Act
+    testClient.getItems( 5 ).subscribe();
+
   } );
 
   it( 'resolve missing Header variable', ( done: ( e?: any ) => void ) => {
@@ -501,13 +494,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.isFalse( resp.headers.has( 'path' ) );
         done();
@@ -515,6 +502,9 @@ describe( '@Header', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItems().subscribe();
   } );
 
   it( 'resolve default Header variable', ( done: ( e?: any ) => void ) => {
@@ -522,13 +512,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItems2();
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.deepEqual( resp.headers.getAll( 'page' ), [ '20' ] );
         done();
@@ -537,6 +521,9 @@ describe( '@Header', () => {
       }
     } );
 
+    // Act
+    testClient.getItems2().subscribe();
+
   } );
 
   it( 'resolve multiple Header variable', ( done: ( e?: any ) => void ) => {
@@ -544,13 +531,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItems3( 3, '20' );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.deepEqual( <any> resp.headers.getAll( 'page' ), [ '3' ] );
         assert.deepEqual( resp.headers.getAll( 'sort' ), [ 'asc' ] );
@@ -561,6 +542,9 @@ describe( '@Header', () => {
       }
     } );
 
+    // Act
+    testClient.getItems3( 3, '20' ).subscribe();
+
   } );
 
   it( 'resolve Collection', ( done: ( e?: any ) => void ) => {
@@ -568,13 +552,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItemsDefault( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.equal( resp.headers.get( 'field' ), 'name,desc' );
         done();
@@ -582,6 +560,9 @@ describe( '@Header', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItemsDefault( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format CSV', ( done: ( e?: any ) => void ) => {
@@ -589,13 +570,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItemsCSV( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.equal( resp.headers.get( 'field' ), 'name,desc' );
         done();
@@ -603,6 +578,9 @@ describe( '@Header', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItemsCSV( [ 'name', 'desc' ] ).subscribe();
 
   } );
 
@@ -611,13 +589,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItemsSSV( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.equal( resp.headers.get( 'field' ), 'name desc' );
         done();
@@ -626,6 +598,9 @@ describe( '@Header', () => {
       }
     } );
 
+    // Act
+    testClient.getItemsSSV( [ 'name', 'desc' ] ).subscribe();
+
   } );
 
   it( 'resolve Collection Format TSV', ( done: ( e?: any ) => void ) => {
@@ -633,20 +608,17 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItemsTSV( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.equal( resp.headers.get( 'field' ), 'name\tdesc' );
         done();
       } catch ( e ) {
         done( e );
       }
-    } );
+     } );
+
+    // Act
+    testClient.getItemsTSV( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format PIPES', ( done: ( e?: any ) => void ) => {
@@ -654,13 +626,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItemsPIPES( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.equal( resp.headers.get( 'field' ), 'name|desc' );
         done();
@@ -668,6 +634,9 @@ describe( '@Header', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItemsPIPES( [ 'name', 'desc' ] ).subscribe();
   } );
 
   it( 'resolve Collection Format MULTI', ( done: ( e?: any ) => void ) => {
@@ -675,13 +644,7 @@ describe( '@Header', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { headers: req.headers } ) );
     } );
-    let testClient  = new TestClientHeader( requestMock );
-
-    // Act
-    let result = testClient.getItemsMULTI( [ 'name', 'desc' ] );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientHeader( requestMock, resp => {
       try {
         assert.deepEqual( resp.headers.getAll( 'field' ), [ 'name', 'desc' ] );
         done();
@@ -689,6 +652,9 @@ describe( '@Header', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
 
   } );
 } );
@@ -700,13 +666,7 @@ describe( '@Body', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { body: req.body } ) );
     } );
-    let testClient  = new TestClientBody( requestMock );
-
-    // Act
-    let result = testClient.createItem( { name: 'Awesome Item' } );
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientBody( requestMock, resp => {
       try {
         assert.deepEqual( JSON.parse(resp.body), { name: 'Awesome Item' } );
         done();
@@ -714,6 +674,9 @@ describe( '@Body', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.createItem( { name: 'Awesome Item' } ).subscribe();
   } );
 
   it( 'resolve missing Body variable', ( done: ( e?: any ) => void ) => {
@@ -721,13 +684,7 @@ describe( '@Body', () => {
     let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       return of( new HttpResponse<any>( { body: req.body } ) );
     } );
-    let testClient  = new TestClientBody( requestMock );
-
-    // Act
-    let result = testClient.createItem();
-
-    // Assert
-    result.subscribe( resp => {
+    let testClient  = new TestClientBody( requestMock, resp => {
       try {
         assert.deepEqual( resp.body, null );
         done();
@@ -735,6 +692,9 @@ describe( '@Body', () => {
         done( e );
       }
     } );
+
+    // Act
+    testClient.createItem().subscribe();
   } );
 
   it( 'resolve 2 Body variable', () => {

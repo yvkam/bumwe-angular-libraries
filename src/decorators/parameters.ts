@@ -32,13 +32,13 @@ export const Format = {
 };
 
 export function paramBuilder( paramName: string ) {
-  return function ( name: string, options?: { defaultValue?: any, format?: string } ) {
+  return function ( name: string, options?: { value?: any, format?: string } ) {
     return function ( target: RestClient, propertyKey: string | symbol, parameterIndex: number ) {
       let format;
       let value;
-      if ( options ) {
-        if ( options.defaultValue ) {
-          value = options.defaultValue;
+      if ( options instanceof Object ) {
+        if ( options.value ) {
+          value = options.value;
         }
         if ( options.format ) {
           if ( Format[ options.format ] ) {
@@ -47,7 +47,8 @@ export function paramBuilder( paramName: string ) {
             throw new Error( 'Unknown Collection Format: \'' + options.format + '\'' );
           }
         }
-      } else {
+      }
+      if ( typeof options === 'string' ) {
         value = options;
       }
       var metadataKey   = `${<string>propertyKey}_${paramName}_parameters`;
