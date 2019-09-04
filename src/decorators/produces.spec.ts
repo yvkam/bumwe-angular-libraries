@@ -1,36 +1,9 @@
 import { assert } from 'chai';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpHandler, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Produces, MediaType } from './produces';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
-import { Map } from './map';
-import { Produces, MediaType } from './produces';
-
-describe( '@Produces', () => {
-
-  it( 'verify Produces function is called', ( done: ( e?: any ) => void ) => {
-    // Arrange
-    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      let json: any = { name: 'itemName', desc: 'Some awesome item' };
-      return Observable.of( new HttpResponse<any>( { body: json } ) );
-    } );
-    let testClient  = new TestClient( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    result.subscribe( item => {
-      try {
-        assert.equal( item[ 'name' ], 'itemName' );
-        assert.equal( item[ 'desc' ], 'Some awesome item' );
-        done();
-      } catch ( e ) {
-        done( e );
-      }
-    } );
-  } );
-} );
 
 class HttpMock extends HttpClient {
 
@@ -57,8 +30,35 @@ class TestClient extends RestClient {
 
   @Get( '/test' )
   @Produces( MediaType.JSON )
+  // @ts-ignore
   public getItems(): Observable<{}> {
     return null;
   }
 
 }
+
+describe( '@Produces', () => {
+
+  it( 'verify Produces function is called', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      let json: any = { name: 'itemName', desc: 'Some awesome item' };
+      return of( new HttpResponse<any>( { body: json } ) );
+    } );
+    let testClient  = new TestClient( requestMock );
+
+    // Act
+    let result = testClient.getItems();
+
+    // Assert
+    result.subscribe( item => {
+      try {
+        assert.equal( item[ 'name' ], 'itemName' );
+        assert.equal( item[ 'desc' ], 'Some awesome item' );
+        done();
+      } catch ( e ) {
+        done( e );
+      }
+    } );
+  } );
+} );

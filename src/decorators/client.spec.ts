@@ -1,29 +1,10 @@
 
-import {assert} from 'chai';
+import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Client } from './client';
-
-describe('@Client', () => {
-
-  it('verify decorator attributes are added to the request', () => {
-    // Arrange
-    let requestMock = new HttpMock((req: HttpRequest<any>) => {
-      return of(new HttpResponse<any>({status: 200}));
-    });
-    let testClient = new TestClient(requestMock);
-
-    // Assert
-    assert.equal(testClient.getServiceId(), 'customer-service');
-    assert.equal(testClient.getBaseUrl(), '/api/v1/customers');
-    assert.deepEqual(<any> testClient.getDefaultHeaders(), {
-      'content-type': 'application/json'
-    });
-
-  });
-});
 
 class HttpMock extends HttpClient {
 
@@ -49,6 +30,7 @@ class HttpMock extends HttpClient {
     'content-type': 'application/json'
   }
 })
+//@ts-ignore
 class TestClient extends RestClient {
 
   constructor( httpHandler: HttpClient ) {
@@ -56,8 +38,28 @@ class TestClient extends RestClient {
   }
 
   @Get('/test')
+  // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 
 }
+
+describe('@Client', () => {
+
+  it('verify decorator attributes are added to the request', () => {
+    // Arrange
+    let requestMock = new HttpMock((req: HttpRequest<any>) => {
+      return of(new HttpResponse<any>({status: 200}));
+    });
+    let testClient = new TestClient(requestMock);
+
+    // Assert
+    assert.equal(testClient.getServiceId(), 'customer-service');
+    assert.equal(testClient.getBaseUrl(), '/api/v1/customers');
+    assert.deepEqual(<any> testClient.getDefaultHeaders(), {
+      'content-type': 'application/json'
+    });
+
+  });
+});

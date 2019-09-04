@@ -1,35 +1,9 @@
 import { assert } from 'chai';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Map } from './map';
-
-describe( '@Map', () => {
-
-  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
-    // Arrange
-    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      let json: any = { name: 'itemName', desc: 'Some awesome item' };
-      return Observable.of( new HttpResponse<any>( { body: JSON.stringify( json ) } ) );
-    } );
-    let testClient  = new TestClient( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    result.subscribe( item => {
-      try {
-        assert.equal( item.name, 'itemName' );
-        assert.equal( item.desc, 'Some awesome item' );
-        done();
-      } catch ( e ) {
-        done( e );
-      }
-    } );
-  } );
-} );
 
 class HttpMock extends HttpClient {
 
@@ -48,20 +22,6 @@ class HttpMock extends HttpClient {
 
 }
 
-class TestClient extends RestClient {
-
-  constructor( httpHandler: HttpClient ) {
-    super( httpHandler );
-  }
-
-  @Get( '/test' )
-  @Map( resp => new Item( JSON.parse(resp.body) ) )
-  public getItems(): Observable<Item> {
-    return null;
-  }
-
-}
-
 class Item {
 
   public name: string;
@@ -72,3 +32,44 @@ class Item {
     this.desc = props.desc;
   }
 }
+
+class TestClient extends RestClient {
+
+  constructor( httpHandler: HttpClient ) {
+    super( httpHandler );
+  }
+
+  @Get( '/test' )
+  @Map( resp => new Item( JSON.parse(resp.body) ) )
+  //@ts-ignore
+  public getItems(): Observable<Item> {
+    return null;
+  }
+
+}
+
+describe( '@Map', () => {
+
+  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      let json: any = { name: 'itemName', desc: 'Some awesome item' };
+      return of( new HttpResponse<any>( { body: JSON.stringify( json ) } ) );
+    } );
+    let testClient  = new TestClient( requestMock );
+
+    // Act
+    let result = testClient.getItems();
+
+    // Assert
+    result.subscribe( item => {
+      try {
+        assert.equal( item.name, 'itemName' );
+        assert.equal( item.desc, 'Some awesome item' );
+        done();
+      } catch ( e ) {
+        done( e );
+      }
+    } );
+  } );
+} );

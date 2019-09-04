@@ -1,61 +1,8 @@
 import { assert } from 'chai';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { RestClient } from './rest-client';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Get, RequestMethod } from './decorators/request-methods';
-
-describe( 'RestClient', () => {
-  beforeEach( () => {
-    // Nothing here yet.
-  } );
-
-  it( 'checkSetup', () => {
-    // Arrange
-    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      return Observable.of( new HttpResponse() );
-    } );
-    let testClient  = new TestClient1( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    assert.equal( requestMock.callCount, 1 );
-    assert.equal( requestMock.lastRequest.method, RequestMethod.GET );
-
-  } );
-
-  it( 'call requestInterceptor', () => {
-    // Arrange
-    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      return Observable.of( new HttpResponse<any>( ) );
-    } );
-    let testClient  = new TestClient2( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    assert.equal( testClient.interceptorCallCount, 1 );
-    assert.equal( testClient.interceptorRequest.method, RequestMethod.GET );
-
-  } );
-
-  it( 'call responseInterceptor', () => {
-    // Arrange
-    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      return Observable.of( new HttpResponse<any>( { status: 200 } ) );
-    } );
-    let testClient  = new TestClient3( requestMock );
-
-    // Act
-    let result = testClient.getItems();
-
-    // Assert
-    assert.equal( testClient.interceptorCallCount, 1 );
-
-  } );
-} );
 
 class HttpMock extends HttpClient {
 
@@ -81,6 +28,7 @@ class TestClient1 extends RestClient {
   }
 
   @Get( '/test' )
+  // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
@@ -97,13 +45,15 @@ class TestClient2 extends RestClient {
   }
 
   @Get( '/test' )
+  // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 
-  protected requestInterceptor( req: HttpRequest<any> ): void {
+  protected requestInterceptor( req: HttpRequest<any> ): HttpRequest<any> {
     this.interceptorCallCount++;
     this.interceptorRequest = req;
+    return req;
   }
 
 }
@@ -118,6 +68,7 @@ class TestClient3 extends RestClient {
   }
 
   @Get( '/test' )
+  // @ts-ignore
   public getItems(): Observable<Response> {
     return null;
   }
@@ -129,3 +80,56 @@ class TestClient3 extends RestClient {
   }
 
 }
+
+describe( 'RestClient', () => {
+  beforeEach( () => {
+    // Nothing here yet.
+  } );
+
+  it( 'checkSetup', () => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      return of( new HttpResponse() );
+    } );
+    let testClient  = new TestClient1( requestMock );
+
+    // Act
+    let result = testClient.getItems();
+
+    // Assert
+    assert.equal( requestMock.callCount, 1 );
+    assert.equal( requestMock.lastRequest.method, RequestMethod.GET );
+
+  } );
+
+  it( 'call requestInterceptor', () => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      return of( new HttpResponse<any>( ) );
+    } );
+    let testClient  = new TestClient2( requestMock );
+
+    // Act
+    let result = testClient.getItems();
+
+    // Assert
+    assert.equal( testClient.interceptorCallCount, 1 );
+    assert.equal( testClient.interceptorRequest.method, RequestMethod.GET );
+
+  } );
+
+  it( 'call responseInterceptor', () => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      return of( new HttpResponse<any>( { status: 200 } ) );
+    } );
+    let testClient  = new TestClient3( requestMock );
+
+    // Act
+    let result = testClient.getItems();
+
+    // Assert
+    assert.equal( testClient.interceptorCallCount, 1 );
+
+  } );
+} );
