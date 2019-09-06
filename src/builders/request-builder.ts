@@ -184,7 +184,7 @@ export function methodBuilder( method: string ) {
         let intercepted: HttpRequest<any>|Observable<HttpRequest<any>> = this.requestInterceptor( request );
 
         if (intercepted instanceof HttpRequest) {
-          intercepted = of(request);
+          intercepted = of(intercepted);
         }
 
         if (!(intercepted instanceof Observable)) {
