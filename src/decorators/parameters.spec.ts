@@ -5,7 +5,7 @@ import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get, Post } from './request-methods';
 
-import { Path, Query, Format, Header, Body } from './parameters';
+import { Path, Query, PlainQuery, Format, Header, Body } from './parameters';
 
 class HttpMock extends HttpClient {
 
@@ -115,6 +115,37 @@ class TestClientQuery extends RestClient {
   @Get( '/itemsMULTI' )
   // @ts-ignore
   public getItemsMULTI( @Query( 'field', { format: Format.MULTI } ) fields: string | string[] ): Observable<HttpResponse<any>> {
+    return null;
+  }
+
+}
+
+interface AnyQuery {
+  [k: string]: any;
+}
+
+class TestClientPlainQuery extends RestClient {
+
+  constructor( httpHandler: HttpClient, private responseCallback?: (resp: any) => void ) {
+    super( httpHandler );
+  }
+
+  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+    if (this.responseCallback) {
+      return resp.pipe(tap(this.responseCallback));
+    }
+    return resp;
+  }
+
+  @Get( '/items' )
+  // @ts-ignore
+  public getItems( @PlainQuery query?: string ): Observable<HttpResponse<any>> {
+    return null;
+  }
+
+  @Get( '/items2' )
+  // @ts-ignore
+  public getItems2( @PlainQuery query?: AnyQuery ): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -465,6 +496,66 @@ describe( '@Query', () => {
 
     // Act
     let result = testClient.getItemsMULTI( [ 'name', 'desc' ] ).subscribe();
+  } );
+} );
+
+describe( '@PlainQuery', () => {
+
+  it( 'resolve PlainQuery as a string', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
+    } );
+    let testClient  = new TestClientPlainQuery( requestMock, resp => {
+      try {
+        assert.equal( resp.url, '/items?page=5&filter=name' );
+        done();
+      } catch ( e ) {
+        done( e );
+      }
+    } );
+
+    // Act
+    let result = testClient.getItems('page=5&filter=name').subscribe();
+
+  } );
+
+  it( 'resolve PlainQuery as a string', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
+    } );
+    let testClient  = new TestClientPlainQuery( requestMock, resp => {
+      try {
+        assert.equal( resp.url, '/items?page=5&filter=name' );
+        done();
+      } catch ( e ) {
+        done( e );
+      }
+    } );
+
+    // Act
+    let result = testClient.getItems('?page=5&filter=name').subscribe();
+
+  } );
+
+  it( 'resolve PlainQuery as object', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      return of( new HttpResponse<any>( { url: req.urlWithParams } ) );
+    } );
+    let testClient  = new TestClientPlainQuery( requestMock, resp => {
+      try {
+        assert.equal( resp.url, '/items2?page=5&filter=name' );
+        done();
+      } catch ( e ) {
+        done( e );
+      }
+    } );
+
+    // Act
+    let result = testClient.getItems2({ page: 5, filter: 'name' }).subscribe();
+
   } );
 } );
 

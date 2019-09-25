@@ -80,7 +80,8 @@ export const Path = paramBuilder( 'Path' );
 export const Query = paramBuilder( 'Query' );
 
 /**
- * Query value of a method's url, type: key-value pair object
+ * Query value of a method's url,
+ * type: key-value pair object or key-value pair string separated by '&'
  */
 export const PlainQuery = paramBuilder( 'PlainQuery' )( 'PlainQuery' );
 

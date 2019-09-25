@@ -2,6 +2,9 @@
 [![Build Status](https://travis-ci.org/rosostolato/angular-rest-client.svg?branch=master)](https://travis-ci.org/rosostolato/angular-rest-client)
 [![codecov](https://codecov.io/gh/rosostolato/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/rosostolato/angular-rest-client)
 
+# Update (2019-09-25) - v7.3.2
+- PlainQuery can be a full query string separated by '=' or an object of pair key-value
+
 # Update (2019-09-04) - v7.3.0
 > **WARNING**: Version 7.3.0 is a big update that can break codes.
 

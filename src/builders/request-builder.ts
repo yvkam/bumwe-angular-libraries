@@ -116,8 +116,21 @@ export function methodBuilder( method: string ) {
 
               if ( value instanceof Object ) {
                 Object.keys(value).forEach( key => search = search.append( key, value[key] ) );
+
+              } else if ( typeof value === 'string' ) {
+                if (value.charAt(0) === '?') {
+                  value = value.substr(1);
+                }
+
+                if ( typeof value === 'string' ) {
+                  value.split('&').forEach(pair => {
+                    const [k, v] = pair.split('=');
+                    search = search.append( k, v );
+                  });
+                }
+
               } else {
-                throw new Error( 'Value is not an Object' );
+                throw new Error( 'Value type is not correct' );
               }
             } );
         }
