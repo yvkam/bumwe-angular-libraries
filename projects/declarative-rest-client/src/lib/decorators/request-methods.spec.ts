@@ -1,0 +1,82 @@
+import { assert } from 'chai';
+import { Observable, of } from 'rxjs';
+import { RestClient } from '../rest-client';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
+import { GET, POST, RequestMethod } from './request-methods';
+
+class HttpMock extends HttpClient {
+
+  public callCount = 0;
+  public lastRequest: HttpRequest<any>;
+
+  constructor( private requestFunction: ( req: HttpRequest<any> ) => Observable<HttpResponse<any>> ) {
+    super(null);
+  }
+
+  request(req: HttpRequest<any>|any, p2?: any, p3?: any, p4?: any): Observable<any> {
+    this.callCount++;
+    this.lastRequest = req;
+    return this.requestFunction(req);
+  }
+
+}
+
+class TestClient extends RestClient {
+
+  constructor( httpHandler: HttpClient ) {
+    super( httpHandler );
+  }
+
+  @GET( '/test' )
+  // @ts-ignore
+  public getItems(): Observable<HttpResponse<any>> {
+    return null;
+  }
+
+  @POST( '/test' )
+  // @ts-ignore
+  public createItems(): Observable<HttpResponse<any>> {
+    return null;
+  }
+
+}
+
+describe( '@GET', () => {
+
+  it( 'verify request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      method = req.method;
+      url    = req.url;
+      return of( new HttpResponse<any>() );
+    } );
+    const testClient  = new TestClient( requestMock );
+
+    // Act
+    testClient.getItems().subscribe();
+    assert.strictEqual( method, RequestMethod.GET );
+    assert.strictEqual( url, '/test' );
+  } );
+} );
+
+describe( '@POST', () => {
+
+  it( 'verify request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      method = req.method;
+      url    = req.url;
+      return of( new HttpResponse<any>() );
+    } );
+    const testClient  = new TestClient( requestMock );
+
+    // Act
+    testClient.createItems().subscribe();
+    assert.equal( method, RequestMethod.POST );
+    assert.equal( url, '/test' );
+  } );
+} );

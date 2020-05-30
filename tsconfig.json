@@ -1,43 +1,29 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noLib": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "declaration": true,
-    "removeComments": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "isolatedModules": false,
-    "lib": [
-      "es2015",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ],
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "pretty": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitUseStrict": false,
-    "noFallthroughCasesInSwitch": true,
-    "outDir": "./dist",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules"
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "lib": [
+      "es2018",
+      "dom"
     ],
-    "types": [
-      "node"
-    ]
+    "paths": {
+      "declarative-rest-client": [
+        "dist/declarative-rest-client/declarative-rest-client",
+        "dist/declarative-rest-client"
+      ]
+    }
   },
-  "exclude": [
-    "desktop",
-    "node_modules",
-    "dist",
-    "src"
-  ],
-  "compileOnSave": false
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }

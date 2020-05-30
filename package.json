@@ -1,65 +1,48 @@
 {
-  "name": "angular7-rest-client",
-  "version": "7.3.2",
-  "description": "Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
-  "main": "index.js",
+  "name": "ng-kanelu",
+  "version": "0.0.0",
   "scripts": {
-    "setup": "yarn --freeze-lockfile",
-    "test": "node_modules/.bin/gulp test",
-    "watch": "node_modules/.bin/gulp default",
-    "codecov": "./node_modules/.bin/codecov"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "test:lib": "jest --config ./projects/declarative-rest-client/jest.config.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rosostolato/angular-rest-client.git"
-  },
-  "keywords": [
-    "angular7",
-    "http",
-    "rest",
-    "client"
-  ],
-  "author": "Mobilunity <support@mobilunity.com>",
-  "contributors": [
-    {
-      "name": "Mobilunity <support@mobilunity.com>"
-    }
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rosostolato/angular-rest-client/issues"
-  },
-  "homepage": "https://github.com/rosostolato/angular-rest-client#readme",
+  "private": true,
   "dependencies": {
-    "@angular/common": "^7.2.15",
-    "@angular/core": "^7.2.15",
-    "@angular/platform-browser": "^7.2.15",
-    "rxjs": "^6.4.0",
-    "zone.js": "^0.8.29"
+    "@angular/animations": "~9.1.1",
+    "@angular/common": "~9.1.1",
+    "@angular/compiler": "~9.1.1",
+    "@angular/core": "~9.1.1",
+    "@angular/forms": "~9.1.1",
+    "@angular/platform-browser": "~9.1.1",
+    "@angular/platform-browser-dynamic": "~9.1.1",
+    "@angular/router": "~9.1.1",
+    "rxjs": "~6.5.4",
+    "tslib": "^1.10.0",
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular/compiler": "^7.2.15",
-    "@types/chai": "^4.1.7",
-    "@types/jasmine": "^3.3.8",
-    "@types/node": "^10.14.17",
+    "@angular-devkit/build-angular": "~0.901.7",
+    "@angular-devkit/build-ng-packagr": "~0.901.7",
+    "@angular/cli": "~9.1.1",
+    "@angular/compiler-cli": "~9.1.1",
+    "@angular/language-service": "~9.1.1",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^12.11.1",
     "async": "^2.6.3",
     "chai": "^4.2.0",
     "codecov": "^3.1.0",
-    "codelyzer": "^4.5.0",
+    "codelyzer": "^5.1.2",
     "del": "^3.0.0",
     "gaze": "^1.1.3",
-    "gulp": "^3.9.1",
-    "gulp-html-extend": "^1.1.6",
-    "gulp-istanbul": "^1.1.3",
-    "gulp-mocha": "^6.0.0",
-    "gulp-replace": "^1.0.0",
-    "gulp-typescript": "^5.0.1",
-    "gulp-util": "^3.0.8",
-    "merge2": "^1.2.2",
-    "natives": "^1.1.6",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.1",
-    "vinyl-paths": "^2.1.0"
+    "jest": "^26.0.1",
+    "jest-preset-angular": "^8.2.0",
+    "ng-packagr": "^9.0.0",
+    "ts-node": "~8.3.0",
+    "tslint": "~6.1.0",
+    "typescript": "~3.8.3"
   }
 }
