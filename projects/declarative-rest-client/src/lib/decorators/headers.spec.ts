@@ -43,14 +43,12 @@ describe( '@headers', () => {
 
   it( 'verify decorator attributes are set', () => {
     // Arrange
-    let testHeaders: {
-      [name: string]: any;
-    } ;
+    let testHeaders: any ;
     const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       testHeaders = req.headers;
       return of( new HttpResponse<any>( { status: 200 } ) );
     } );
-    const testClient  = new TestClient( requestMock );
+    const testClient  = new TestClient(requestMock);
 
     // Act
     testClient.getItems().subscribe();

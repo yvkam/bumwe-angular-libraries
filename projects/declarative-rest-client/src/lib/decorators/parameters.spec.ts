@@ -588,23 +588,20 @@ class TestClientPath extends RestClient {
   }
 
   @get('/items/{id}')
-  // @ts-ignoredd
   public getItem(@pathParam('id') id?: number): Observable<HttpResponse<any>> {
     return;
   }
 
   @get('/items2/{id}')
-  // @ts-ignore
   public getItem2(@pathParam('id', {value: 7}) id?: number): Observable<HttpResponse<any>> {
-    return null;
+    return;
   }
 
   @get('/items3/{id}/status/status-{statusName}.{ext}')
-  // @ts-ignore
   public getItem3(@pathParam('id') id: number,
                   @pathParam('statusName') statusName: string,
                   @pathParam('ext', {value: 'json'}) ext?: string): Observable<HttpResponse<any>> {
-    return null;
+    return;
   }
 
 }

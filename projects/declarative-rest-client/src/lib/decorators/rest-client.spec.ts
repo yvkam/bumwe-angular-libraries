@@ -41,6 +41,22 @@ class TestClient extends RestClient {
     return null;
   }
 
+  public getServiceIdWrapper(): string {
+    return this.getServiceId();
+  }
+
+  public getBaseUrlWrapper(): string {
+    return this.getBaseUrl();
+  }
+
+  public getDefaultHeadersWrapper(): { [header: string]: string | string[]; } {
+    return this.getDefaultHeaders();
+  }
+
+  public isWithCredentialsWrapper(): boolean {
+    return this.isWithCredentials();
+  }
+
 }
 
 describe('@restClient', () => {
@@ -53,9 +69,10 @@ describe('@restClient', () => {
     const testClient = new TestClient(requestMock);
 
     // Assert
-    expect(testClient.getServiceId()).toBe( 'customer-service');
-    expect(testClient.getBaseUrl()).toBe( '/api/v1/customers');
-    expect(testClient.getDefaultHeaders() as any).toStrictEqual ({
+    expect(testClient.getServiceIdWrapper()).toBe( 'customer-service');
+    expect(testClient.getBaseUrlWrapper()).toBe( '/api/v1/customers');
+    expect(testClient.isWithCredentialsWrapper()).toBeFalsy();
+    expect(testClient.getDefaultHeadersWrapper() as any).toStrictEqual ({
       'content-type': 'application/json'
     });
 

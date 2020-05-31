@@ -1,23 +1,35 @@
 import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
-import {filter, map, mergeMap, timeout} from 'rxjs/operators';
+import {filter, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {RestClient} from '../rest-client';
 import {FORMAT, metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
+import {RequestMethod, RequestMethodOptions} from '../decorators/request-methods';
 
-export function methodBuilder(method: string) {
-  return (path: string) => {
+export function methodBuilder(method?: RequestMethod) {
+  return (request: string | RequestMethodArgs, options?: RequestMethodOptions) => {
     return (target: RestClient, propertyKey: string, descriptor: any) => {
 
       descriptor.value = function(...methodArgs: any[]) {
 
+        const path = typeof request === 'string' ? request : request.path;
+        const httpRequestMethod = method || (request as RequestMethodArgs).method;
         const metadata = getMetadata(target, propertyKey, methodArgs);
-        const body: any = getBody(metadata.body, metadata.plainBody);
-        const fullUrl = buildFullUrl(this.getBaseUrl(), path, metadata.pathParams);
-        const params = setQueryParams(fullUrl, metadata.queryParams, metadata.plainQueryParams);
-        const headers: HttpHeaders = buildHttpHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header);
+        const body = getBody(metadata.body, metadata.plainBody);
+        const url = buildUrl(this.getBaseUrl(), path, metadata.pathParams);
+        const params = setQueryParams(url, metadata.queryParams, metadata.plainQueryParams);
+        const headers: HttpHeaders = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, options);
 
         // send and intercept the request
-        let resp = sendRequest.apply(this, [method, fullUrl, body, params, headers]);
+        let resp = sendRequest.apply(this, [httpRequestMethod, url, body, params, headers]);
+
+        // intercept tokens
+        if (options && options.tokensToIntercept) {
+          resp.pipe(
+            filter((r: HttpEvent<any>) => r.type === HttpEventType.Response),
+            tap((r: HttpResponse<any>) => options.tokensToIntercept.forEach(token => sessionStorage.setItem(token, r.headers.get(token))
+            ))
+          );
+        }
 
         // mapper
         if (descriptor.mappers) {
@@ -27,8 +39,8 @@ export function methodBuilder(method: string) {
         }
 
         // timeout
-        if (descriptor.timeout) {
-          descriptor.timeout.forEach((duration: number) => {
+        if (descriptor.timeout || (options && options.timeout)) {
+          [].concat(descriptor.timeout || options.timeout).forEach((duration: number) => {
             resp = resp.pipe(timeout(duration));
           });
         }
@@ -59,11 +71,12 @@ function getMetadata(target: RestClient, propertyKey: string, methodArgs: any[])
   };
 }
 
-function sendRequest(method,
+function sendRequest(method: RequestMethod,
                      url: string,
-                     body, params: HttpParams,
-                     headers: HttpHeaders,
-): Observable<HttpEvent<any>> {
+                     body,
+                     params: HttpParams,
+                     headers: HttpHeaders): Observable<HttpEvent<any>> {
+
   const request = new HttpRequest(method, url, body, {
     headers,
     params,
@@ -123,7 +136,7 @@ function buildFullUrlTemplate(baseUrl: string, path: string) {
   return baseUrl + path;
 }
 
-function buildFullUrl(baseUrl: string, path: string, pathParamsMetadata: ParameterMetadata[]) {
+function buildUrl(baseUrl: string, path: string, pathParamsMetadata: ParameterMetadata[]) {
   const urlTemplate = buildFullUrlTemplate(baseUrl, path);
   return replacePathParams(urlTemplate, pathParamsMetadata);
 }
@@ -235,7 +248,11 @@ function replacePlainQueryParams(fullUrl: string, metadata: ParameterMetadata[],
   return finalHttpParams;
 }
 
-function buildHttpHeaders(classLevelHeaders, methodLevelHeaders, headerMetadata: ParameterMetadata[]): HttpHeaders {
+function buildHeaders(classLevelHeaders,
+                      methodLevelHeaders,
+                      headerMetadata: ParameterMetadata[],
+                      options?: RequestMethodOptions): HttpHeaders {
+
   let headers = new HttpHeaders(classLevelHeaders);
 
   // set method specific headers
@@ -248,6 +265,26 @@ function buildHttpHeaders(classLevelHeaders, methodLevelHeaders, headerMetadata:
       }
     }
   }
+
+  // set options headers
+  if (options) {
+    if (options.consumes && options.consumes.length > 0) {
+      headers = headers.set('accept', options.consumes.join(',') + '');
+    }
+
+    if (options.produces && options.produces.length > 0) {
+      headers = headers.set('content-type', options.produces.join(',') + '');
+    }
+
+    if (options.tokensToSend && options.tokensToSend.length > 0) {
+      options.tokensToSend
+        .map(t => [t, sessionStorage.getItem(t)])
+        .filter(([k, v]) => !!v)
+        .forEach(([k, v]) => headers = headers.set(k, v + ''));
+    }
+  }
+
+
   // set parameter specific headers
   if (headerMetadata) {
     for (const k in headerMetadata) {
@@ -263,5 +300,10 @@ function buildHttpHeaders(classLevelHeaders, methodLevelHeaders, headerMetadata:
   }
 
   return headers;
+}
+
+export interface RequestMethodArgs {
+  path: string;
+  method: RequestMethod;
 }
 

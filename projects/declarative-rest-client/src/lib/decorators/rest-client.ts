@@ -1,25 +1,32 @@
 /**
  * Configure the REST restClient
- * @param args restClient arguments
+ * @param options restClient option
  */
-export function restClient(args: { serviceId?: string, baseUrl?: string, headers?: any, withCredentials?: any } ) {
-  return ( Target ) => {
-    if ( args.serviceId ) {
+export function restClient(options: RestClientArgs) {
+  return (Target) => {
+    if (options.serviceId) {
       Target.prototype.getServiceId = () => {
-        return args.serviceId;
+        return options.serviceId;
       };
     }
-    if ( args.baseUrl ) {
+    if (options.baseUrl) {
       Target.prototype.getBaseUrl = () => {
-        return args.baseUrl;
+        return options.baseUrl;
       };
     }
-    if ( args.headers ) {
-      Target.prototype.getDefaultHeaders = () => args.headers;
+    if (options.headers) {
+      Target.prototype.getDefaultHeaders = () => options.headers;
     }
-    if ( args.withCredentials ) {
-      Target.prototype.isWithCredentials = () => args.withCredentials;
+    if ( options.withCredentials ) {
+      Target.prototype.isWithCredentials = () => options.withCredentials;
     }
     return Target;
   };
+}
+
+interface RestClientArgs {
+  serviceId?: string;
+  baseUrl?: string;
+  headers?: { [header: string]: string | string[] };
+  withCredentials?: boolean;
 }

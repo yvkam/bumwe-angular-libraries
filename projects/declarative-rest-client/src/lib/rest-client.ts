@@ -10,19 +10,19 @@ export abstract class RestClient {
     protected httpClient: HttpClient
   ) {}
 
-  public getServiceId(): string {
+  protected getServiceId(): string {
     return;
   }
 
-  public getBaseUrl(): string {
+  protected getBaseUrl(): string {
     return;
   }
 
-  public getDefaultHeaders(): object {
+  protected getDefaultHeaders(): { [header: string]: string | string[]; } {
     return;
   }
 
-  public isWithCredentials(): boolean {
+  protected isWithCredentials(): boolean {
     return;
   }
 

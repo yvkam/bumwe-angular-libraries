@@ -125,7 +125,7 @@ describe( 'RestClient', () => {
     testClient.getItems().subscribe();
 // Assert
     expect( requestMock.callCount).toBe( 1 );
-    expect( requestMock.lastRequest.method.toLowerCase()).toBe( RequestMethod.GET );
+    expect( requestMock.lastRequest.method).toBe( RequestMethod.GET );
 
   } );
 
@@ -140,7 +140,7 @@ describe( 'RestClient', () => {
     testClient.getItems();
 // Assert
     expect( testClient.interceptorCallCount).toBe( 1 );
-    expect( testClient.interceptorRequest.method.toLowerCase()).toBe( RequestMethod.GET );
+    expect( testClient.interceptorRequest.method).toBe( RequestMethod.GET );
 
   } );
 
@@ -159,7 +159,7 @@ describe( 'RestClient', () => {
 // Assert
     expect( testClient.timeout).toBe( true );
     expect( testClient.interceptorCallCount).toBe( 1 );
-    expect( testClient.interceptorRequest.method.toLowerCase()).toBe( RequestMethod.GET );
+    expect( testClient.interceptorRequest.method).toBe( RequestMethod.GET );
 
   } );
 
