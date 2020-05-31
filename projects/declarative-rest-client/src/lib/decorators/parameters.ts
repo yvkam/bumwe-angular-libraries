@@ -1,9 +1,55 @@
 import {RestClient} from '../rest-client';
 
+export const metadataKeySuffix = {
+  pathParam: `_PathParam_parameters`,
+  queryParam: `_QueryParam_parameters`,
+  plainQuery: `_PlainQuery_parameters`,
+  body: `_Body_parameters`,
+  plainBody: `_PlainBody_parameters`,
+  header: `_Header_parameters`,
+};
+
+/**
+ * pathParam variable of a method's url, type: string
+ * @param key - path key to bind value
+ */
+export const pathParam = paramBuilder(metadataKeySuffix.pathParam);
+
+/**
+ * queryParam value of a method's url, type: string
+ * @param  key - query key to bind value
+ */
+export const queryParam = paramBuilder(metadataKeySuffix.queryParam);
+
+/**
+ * queryParam value of a method's url,
+ * type: key-value pair object or key-value pair string separated by '&'
+ */
+export const plainQuery = paramBuilder(metadataKeySuffix.plainQuery)(metadataKeySuffix.plainQuery);
+
+/**
+ * body of a REST method, type: key-value pair object
+ * Only one body per method!
+ */
+export const body = paramBuilder(metadataKeySuffix.body)(metadataKeySuffix.body);
+
+/**
+ * body of a REST method, type: key-value pair string separated by '&'
+ * Only one body per method!
+ */
+export const plainBody = paramBuilder(metadataKeySuffix.plainBody)(metadataKeySuffix.plainBody);
+
+/**
+ * Custom header of a REST method, type: string
+ * @param key - header key to bind value
+ */
+export const header = paramBuilder(metadataKeySuffix.header);
+
+
 /**
  * collection Formats
  */
-export const Format = {
+export const FORMAT = {
   /**
    *  comma separated values foo,bar.
    */
@@ -36,8 +82,8 @@ function validateFormat(format: string): string {
     return undefined;
   }
 
-  if (!Format[format]) {
-    throw new Error('Unknown Collection Format: \'' + format + '\'');
+  if (!FORMAT[format]) {
+    throw new Error('Unknown Collection FORMAT: \'' + format + '\'');
   }
 
   return format;
@@ -62,49 +108,3 @@ export interface ParameterMetadata {
   index: string;
   format: string;
 }
-
-
-export const metadataKeySuffix = {
-  pathParam: `_PathParam_parameters`,
-  queryParam: `_QueryParam_parameters`,
-  plainQuery: `_PlainQuery_parameters`,
-  body: `_Body_parameters`,
-  plainBody: `_PlainBody_parameters`,
-  header: `_Header_parameters`,
-};
-
-/**
- * PathParam variable of a method's url, type: string
- * @param key - path key to bind value
- */
-export const PathParam = paramBuilder(metadataKeySuffix.pathParam);
-
-/**
- * QueryParam value of a method's url, type: string
- * @param  key - query key to bind value
- */
-export const QueryParam = paramBuilder(metadataKeySuffix.queryParam);
-
-/**
- * QueryParam value of a method's url,
- * type: key-value pair object or key-value pair string separated by '&'
- */
-export const PlainQuery = paramBuilder(metadataKeySuffix.plainQuery)(metadataKeySuffix.plainQuery);
-
-/**
- * Body of a REST method, type: key-value pair object
- * Only one body per method!
- */
-export const Body = paramBuilder(metadataKeySuffix.body)(metadataKeySuffix.body);
-
-/**
- * Body of a REST method, type: key-value pair string separated by '&'
- * Only one body per method!
- */
-export const PlainBody = paramBuilder(metadataKeySuffix.plainBody)(metadataKeySuffix.plainBody);
-
-/**
- * Custom header of a REST method, type: string
- * @param key - header key to bind value
- */
-export const Header = paramBuilder(metadataKeySuffix.header);

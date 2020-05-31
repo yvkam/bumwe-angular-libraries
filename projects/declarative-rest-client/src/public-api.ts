@@ -1,13 +1,13 @@
 /*
- * Public API Surface of declarative-rest-client
+ * Public API Surface of declarative-rest-restClient
  */
 
-export * from './lib/declarative-rest-client.module';
+export * from './lib/declarative-rest-restClient.module';
 
 export * from './lib/rest-client';
 
 export * from './lib/decorators/map';
-export * from './lib/decorators/client';
+export * from './lib/decorators/rest-client';
 export * from './lib/decorators/headers';
 export * from './lib/decorators/on-emit';
 export * from './lib/decorators/timeout';

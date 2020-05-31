@@ -2,22 +2,114 @@ import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpParams, HttpReque
 import {filter, map, mergeMap, timeout} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {RestClient} from '../rest-client';
-import {Format, metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
+import {FORMAT, metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
 
+export function methodBuilder(method: string) {
+  return (path: string) => {
+    return (target: RestClient, propertyKey: string, descriptor: any) => {
 
-function getBody(metadata: ParameterMetadata[], plain: boolean) {
+      descriptor.value = function(...methodArgs: any[]) {
+
+        const metadata = getMetadata(target, propertyKey, methodArgs);
+        const body: any = getBody(metadata.body, metadata.plainBody);
+        const fullUrl = buildFullUrl(this.getBaseUrl(), path, metadata.pathParams);
+        const params = setQueryParams(fullUrl, metadata.queryParams, metadata.plainQueryParams);
+        const headers: HttpHeaders = buildHttpHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header);
+
+        // send and intercept the request
+        let resp = sendRequest.apply(this, [method, fullUrl, body, params, headers]);
+
+        // mapper
+        if (descriptor.mappers) {
+          descriptor.mappers.forEach((mapper: (resp: any) => any) => {
+            resp = resp.pipe(map(mapper));
+          });
+        }
+
+        // timeout
+        if (descriptor.timeout) {
+          descriptor.timeout.forEach((duration: number) => {
+            resp = resp.pipe(timeout(duration));
+          });
+        }
+
+        // emitters
+        if (descriptor.emitters) {
+          descriptor.emitters.forEach((handler: (resp: Observable<any>) => Observable<any>) => {
+            resp = handler(resp);
+          });
+        }
+
+        return resp;
+      };
+
+      return descriptor;
+    };
+  };
+}
+
+function getMetadata(target: RestClient, propertyKey: string, methodArgs: any[]) {
+  return {
+    pathParams: enrichMetadata(target[propertyKey + metadataKeySuffix.pathParam], methodArgs),
+    queryParams: enrichMetadata(target[propertyKey + metadataKeySuffix.queryParam], methodArgs),
+    plainQueryParams: enrichMetadata(target[propertyKey + metadataKeySuffix.plainQuery], methodArgs),
+    body: enrichMetadata(target[propertyKey + metadataKeySuffix.body], methodArgs),
+    plainBody: enrichMetadata(target[propertyKey + metadataKeySuffix.plainBody], methodArgs),
+    header: enrichMetadata(target[propertyKey + metadataKeySuffix.header], methodArgs)
+  };
+}
+
+function sendRequest(method,
+                     url: string,
+                     body, params: HttpParams,
+                     headers: HttpHeaders,
+): Observable<HttpEvent<any>> {
+  const request = new HttpRequest(method, url, body, {
+    headers,
+    params,
+    withCredentials: this.isWithCredentials()
+  });
+
+  let intercepted: HttpRequest<any> | Observable<HttpRequest<any>> = this.requestInterceptor(request);
+
+  if (intercepted instanceof HttpRequest) {
+    intercepted = of(intercepted);
+  }
+
+  if (!(intercepted instanceof Observable)) {
+    throw new Error('RequestInterceptor should return HttpRequest|Observable<HttpRequest');
+  }
+
+  // make the request and store the observable for later transformation
+  const observable = intercepted.pipe(
+    mergeMap(req => (this.httpClient as HttpClient).request(req)),
+  );
+
+  // handle the response
+  return this.responseInterceptor(observable).pipe(
+    filter((resp: any) => resp.type === HttpEventType.Response),
+    map((resp: HttpResponse<any>) => resp.body)
+  );
+}
+
+function getBody(bodyMetadata: ParameterMetadata[], plainBodyMetadata: ParameterMetadata[]) {
+  const metadata = bodyMetadata || plainBodyMetadata;
+  const plain = plainBodyMetadata && plainBodyMetadata.length > 0;
+
   if (!metadata) {
     return undefined;
   }
 
   if (metadata.length > 1) {
-    throw new Error('Only one @Body is allowed');
+    throw new Error('Only one @body is allowed');
   }
 
-  return plain ? metadata[0] : JSON.stringify(metadata[0]);
+  const value = metadata[0] ? metadata[0].value : undefined;
+
+  return plain ? value : JSON.stringify(value);
 }
 
-function buildFullUrl(baseUrl: string, path: string) {
+function buildFullUrlTemplate(baseUrl: string, path: string) {
   if (!baseUrl) {
     return path;
   }
@@ -31,6 +123,10 @@ function buildFullUrl(baseUrl: string, path: string) {
   return baseUrl + path;
 }
 
+function buildFullUrl(baseUrl: string, path: string, pathParamsMetadata: ParameterMetadata[]) {
+  const urlTemplate = buildFullUrlTemplate(baseUrl, path);
+  return replacePathParams(urlTemplate, pathParamsMetadata);
+}
 
 function replacePathParams(urlTemplate: string, metadata: ParameterMetadata[]): string {
   let url = urlTemplate;
@@ -50,43 +146,27 @@ function replacePathParam(url: string, key: string, value: string) {
   return url.replace('{' + key + '}', value);
 }
 
-function replaceQueryParams(fullUrl: string, queryParamsMetadata: ParameterMetadata[], args: any[]): HttpParams {
-  let search: HttpParams = new HttpParams();
+function setQueryParams(url: string, queryParamsMetadata: ParameterMetadata[], plainQueryParamsMetadata: ParameterMetadata[]): HttpParams {
+  let queryParams: HttpParams = new HttpParams();
 
   if (!queryParamsMetadata) {
-    return search;
+    return queryParams;
   }
 
   queryParamsMetadata
-    .filter((p: any) => args[p.parameterIndex] || p.value) // filter out optional parameters
-    .forEach((p: any) => {
-      const key = p.key;
-      const value: any = args[p.parameterIndex] || p.value;
-
-      // if the value is a instance of Object, we stringify it
-      const rawValue = stringifyQueryParams(value, p.format);
-      const rawValueArray = Array.isArray(rawValue) ? rawValue : [rawValue];
-      rawValueArray.forEach(v => search = search.append(key, v));
+    .filter(m => m.value) // filter out optional parameters
+    .forEach(m => {
+      const value = stringifyQueryParams(m.value, m.format);
+      const values = Array.isArray(value) ? value : [value];
+      values.forEach(v => queryParams = queryParams.append(m.key, v));
     });
 
-  return search;
+  return replacePlainQueryParams(url, plainQueryParamsMetadata, queryParams);
 }
 
-function stringifyQueryParams(value: any, format: string): string | string[] {
+function stringifyQueryParams(value: any, format: string) {
   if (Array.isArray(value)) {
-    switch (format) {
-      case Format.SSV:
-        return value.join(' ');
-      case Format.TSV:
-        return value.join('\t');
-      case Format.PIPES:
-        return value.join('|');
-      case Format.MULTI:
-        return value;
-      case Format.CSV:
-      default:
-        return value.join(',');
-    }
+    return formatData(value, format);
   }
 
   if (value instanceof Object) {
@@ -94,6 +174,22 @@ function stringifyQueryParams(value: any, format: string): string | string[] {
   }
 
   return value;
+}
+
+function formatData(value, format: string) {
+  switch (format) {
+    case FORMAT.SSV:
+      return value.join(' ');
+    case FORMAT.TSV:
+      return value.join('\t');
+    case FORMAT.PIPES:
+      return value.join('|');
+    case FORMAT.MULTI:
+      return value;
+    case FORMAT.CSV:
+    default:
+      return value.join(',');
+  }
 }
 
 function enrichMetadata(metadata: ParameterMetadata[], methodArgs: any[]): ParameterMetadata[] {
@@ -108,205 +204,64 @@ function enrichMetadata(metadata: ParameterMetadata[], methodArgs: any[]): Param
   return metadata.map(m => Object.assign({}, m, {value: methodArgs[m.index] || m.value}));
 }
 
-export function methodBuilder(method: string) {
-  return (path: string) => {
-    return (target: RestClient, propertyKey: string, descriptor: any) => {
-
-      descriptor.value = function(...methodArgs: any[]) {
-
-        const pathParamsMetadata = enrichMetadata(target[propertyKey + metadataKeySuffix.pathParam], methodArgs);
-        const queryParamsMetadata = enrichMetadata(target[propertyKey + metadataKeySuffix.queryParam], methodArgs);
-        const plainQueryParamsMetadata = enrichMetadata(target[propertyKey + metadataKeySuffix.plainQuery], methodArgs);
-        const bodyMetadata = enrichMetadata(target[propertyKey + metadataKeySuffix.body], methodArgs);
-        const plainBodyMetadata = enrichMetadata(target[propertyKey + metadataKeySuffix.plainBody], methodArgs);
-        const headerMetadata = enrichMetadata(target[propertyKey + metadataKeySuffix.header], methodArgs);
-
-        // Body
-        const body: any = getBody(bodyMetadata || plainBodyMetadata, !!plainBodyMetadata);
-
-        // PathParamz
-        let fullUrl: string = buildFullUrl(this.getBaseUrl(), path);
-        fullUrl = replacePathParams(fullUrl, pathParamsMetadata);
-        // fullUrl = replaceQueryParams(fullUrl, queryParamsMetadata, methodArgs);
-        // fullUrl = replacePlainQueryParams(fullUrl, pathParamsMetadata, methodArgs);
-
-        // QueryParam
-        let search: HttpParams = new HttpParams();
-        if (queryParamsMetadata) {
-          queryParamsMetadata
-            .filter((p: any) => methodArgs[p.parameterIndex] || p.value) // filter out optional parameters
-            .forEach((p: any) => {
-              const key = p.key;
-              let value: any = methodArgs[p.parameterIndex];
-
-              if (!value && p.value) {
-                value = p.value;
-              }
-
-              // if the value is a instance of Object, we stringify it
-              if (Array.isArray(value)) {
-                switch (p.format) {
-                  case Format.CSV:
-                    value = value.join(',');
-                    break;
-                  case Format.SSV:
-                    value = value.join(' ');
-                    break;
-                  case Format.TSV:
-                    value = value.join('\t');
-                    break;
-                  case Format.PIPES:
-                    value = value.join('|');
-                    break;
-                  case Format.MULTI:
-                    break;
-                  default:
-                    value = value.join(',');
-                }
-              } else if (value instanceof Object) {
-                value = JSON.stringify(value);
-              }
-              if (Array.isArray(value)) {
-                value.forEach(v => search = search.append(key, v));
-              } else {
-                search = search.set(key, value);
-              }
-            });
-        }
-        if (plainQueryParamsMetadata) {
-          plainQueryParamsMetadata
-            .filter((p: any) => methodArgs[p.parameterIndex]) // filter out optional parameters
-            .forEach((p: any) => {
-              let value: any = methodArgs[p.parameterIndex];
-
-              if (value instanceof Object) {
-                Object.keys(value).forEach(key => search = search.append(key, value[key]));
-
-              } else if (typeof value === 'string') {
-                if (value.charAt(0) === '?') {
-                  value = value.substr(1);
-                }
-
-                if (typeof value === 'string') {
-                  value.split('&').forEach(pair => {
-                    const [k, v] = pair.split('=');
-                    search = search.append(k, v);
-                  });
-                }
-
-              } else {
-                throw new Error('Value type is not correct');
-              }
-            });
-        }
-
-        // Headers
-        // set class default headers
-        let headers: HttpHeaders = new HttpHeaders(this.getDefaultHeaders());
-
-        // set method specific headers
-        for (const k in descriptor.headers) {
-          if (descriptor.headers.hasOwnProperty(k)) {
-            if (headers.has(k)) {
-              headers = headers.append(k, descriptor.headers[k] + '');
-            } else {
-              headers = headers.set(k, descriptor.headers[k] + '');
-            }
-          }
-        }
-        // set parameter specific headers
-        if (headerMetadata) {
-          for (const k in headerMetadata) {
-            if (headerMetadata.hasOwnProperty(k)) {
-              let value: any = methodArgs[headerMetadata[k].index];
-              if (!value && headerMetadata[k].value) {
-                value = headerMetadata[k].value;
-              }
-              if (Array.isArray(value)) {
-                switch (headerMetadata[k].format) {
-                  case Format.CSV:
-                    value = value.join(',');
-                    break;
-                  case Format.SSV:
-                    value = value.join(' ');
-                    break;
-                  case Format.TSV:
-                    value = value.join('\t');
-                    break;
-                  case Format.PIPES:
-                    value = value.join('|');
-                    break;
-                  case Format.MULTI:
-                    break;
-                  default:
-                    value = value.join(',');
-                }
-              }
-              if (Array.isArray(value)) {
-                value.forEach(v => headers = headers.append(headerMetadata[k].key, v + ''));
-              } else {
-                headers = headers.append(headerMetadata[k].key, value + '');
-              }
-            }
-          }
-        }
-
-        // intercept the request
-        const request = new HttpRequest(method, fullUrl, body, {
-          headers,
-          params: search,
-          withCredentials: this.isWithCredentials()
-        });
-
-        let intercepted: HttpRequest<any> | Observable<HttpRequest<any>> = this.requestInterceptor(request);
-
-        if (intercepted instanceof HttpRequest) {
-          intercepted = of(intercepted);
-        }
-
-        if (!(intercepted instanceof Observable)) {
-          throw new Error('RequestInterceptor should return HttpRequest|Observable<HttpRequest');
-        }
-
-        // make the request and store the observable for later transformation
-        let observable: Observable<HttpEvent<any>> = intercepted.pipe(
-          mergeMap(req => (this.httpClient as HttpClient).request(req))
-        );
-
-        // intercept the response
-        observable = this.responseInterceptor(observable);
-
-        // map resp.body
-        observable = observable.pipe(
-          filter(resp => resp.type === HttpEventType.Response),
-          map((resp: HttpResponse<any>) => resp.body)
-        );
-
-        // mapper
-        if (descriptor.mappers) {
-          descriptor.mappers.forEach((mapper: (resp: any) => any) => {
-            observable = observable.pipe(map(mapper));
-          });
-        }
-
-        // timeout
-        if (descriptor.timeout) {
-          descriptor.timeout.forEach((duration: number) => {
-            observable = observable.pipe(timeout(duration));
-          });
-        }
-
-        // emitters
-        if (descriptor.emitters) {
-          descriptor.emitters.forEach((handler: (resp: Observable<any>) => Observable<any>) => {
-            observable = handler(observable);
-          });
-        }
-
-        return observable;
-      };
-
-      return descriptor;
-    };
-  };
+function removeLeadingQuestionMark(value: string) {
+  return value.charAt(0) === '?' ? value.substr(1) : value;
 }
+
+function replacePlainQueryParams(fullUrl: string, metadata: ParameterMetadata[], httpParams: HttpParams): HttpParams {
+  let finalHttpParams = httpParams;
+
+  if (!metadata) {
+    return finalHttpParams;
+  }
+  metadata
+    .filter(m => m.value) // filter out optional parameters
+    .forEach(m => {
+      const value: any = m.value;
+
+      if (value instanceof Object) {
+        Object.keys(value)
+          .forEach(key => finalHttpParams = finalHttpParams.append(key, value[key]));
+      } else if (typeof value === 'string') {
+        removeLeadingQuestionMark(value).split('&')
+          .map(pair => pair.split('='))
+          .forEach(([k, v]) => finalHttpParams = finalHttpParams.append(k, v));
+
+      } else {
+        throw new Error('Value type is not correct');
+      }
+    });
+
+  return finalHttpParams;
+}
+
+function buildHttpHeaders(classLevelHeaders, methodLevelHeaders, headerMetadata: ParameterMetadata[]): HttpHeaders {
+  let headers = new HttpHeaders(classLevelHeaders);
+
+  // set method specific headers
+  for (const key in methodLevelHeaders) {
+    if (methodLevelHeaders.hasOwnProperty(key)) {
+      if (headers.has(key)) {
+        headers = headers.append(key, methodLevelHeaders[key] + '');
+      } else {
+        headers = headers.set(key, methodLevelHeaders[key] + '');
+      }
+    }
+  }
+  // set parameter specific headers
+  if (headerMetadata) {
+    for (const k in headerMetadata) {
+      if (headerMetadata.hasOwnProperty(k)) {
+        let value: any = headerMetadata[k].value;
+        if (Array.isArray(value)) {
+          value = formatData(value, headerMetadata[k].format);
+        }
+        value = Array.isArray(value) ? value : [value];
+        value.forEach(v => headers = headers.append(headerMetadata[k].key, v + ''));
+      }
+    }
+  }
+
+  return headers;
+}
+

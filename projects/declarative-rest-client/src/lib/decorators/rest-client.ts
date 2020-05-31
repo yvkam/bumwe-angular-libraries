@@ -1,8 +1,8 @@
 /**
- * Configure the REST Client
- * @param args client arguments
+ * Configure the REST restClient
+ * @param args restClient arguments
  */
-export function Client( args: { serviceId?: string, baseUrl?: string, headers?: any, withCredentials?: any } ) {
+export function restClient(args: { serviceId?: string, baseUrl?: string, headers?: any, withCredentials?: any } ) {
   return ( Target ) => {
     if ( args.serviceId ) {
       Target.prototype.getServiceId = () => {

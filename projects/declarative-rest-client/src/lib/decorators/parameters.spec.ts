@@ -1,15 +1,14 @@
-import {assert} from 'chai';
 import {tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {RestClient} from '../rest-client';
-import {GET, POST} from './request-methods';
+import {get, post} from './request-methods';
 
-import {Body, Format, Header, PathParam, PlainQuery, QueryParam} from './parameters';
+import {body, FORMAT, header, pathParam, plainQuery, queryParam} from './parameters';
 
-describe('@PathParam', () => {
+describe('@pathParam', () => {
 
-  it('resolve PathParam variable', (done: (e?: any) => void) => {
+  it('resolve pathParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
@@ -29,7 +28,7 @@ describe('@PathParam', () => {
     testClient.getItem(5).subscribe();
   });
 
-  it('resolve missing PathParam variable', () => {
+  it('resolve missing pathParam variable', () => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
@@ -40,14 +39,13 @@ describe('@PathParam', () => {
       // Act
       testClient.getItem();
 // Assert
-      assert.fail();
     } catch (e) {
       expect(e.message).toBe( 'Missing path variable \'id\' in path /items/{id}');
     }
 
   });
 
-  it('resolve default PathParam variable', (done: (e?: any) => void) => {
+  it('resolve default pathParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
@@ -55,7 +53,7 @@ describe('@PathParam', () => {
     const testClient = new TestClientPath(requestMock, resp => {
       // Assert
       try {
-        assert.equal(resp.url, '/items2/7');
+        expect(resp.url).toBe( '/items2/7');
         done();
       } catch (e) {
         done(e);
@@ -66,14 +64,14 @@ describe('@PathParam', () => {
     testClient.getItem2().subscribe();
   });
 
-  it('resolve multiple PathParam variable', (done: (e?: any) => void) => {
+  it('resolve multiple pathParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
     });
     const testClient = new TestClientPath(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items3/20/status/status-done.json');
+        expect(resp.url).toBe( '/items3/20/status/status-done.json');
         done();
       } catch (e) {
         done(e);
@@ -85,16 +83,16 @@ describe('@PathParam', () => {
   });
 });
 
-describe('@QueryParam', () => {
+describe('@queryParam', () => {
 
-  it('resolve QueryParam variable', (done: (e?: any) => void) => {
+  it('resolve queryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items?page=5');
+        expect(resp.url).toBe( '/items?page=5');
         done();
       } catch (e) {
         done(e);
@@ -105,7 +103,7 @@ describe('@QueryParam', () => {
     testClient.getItems(5).subscribe();
   });
 
-  it('resolve missing QueryParam variable', (done: (e?: any) => void) => {
+  it('resolve missing queryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -113,7 +111,7 @@ describe('@QueryParam', () => {
     const testClient = new TestClientQuery(requestMock, resp => {
       // Assert
       try {
-        assert.equal(resp.url, '/items');
+        expect(resp.url).toBe( '/items');
         done();
       } catch (e) {
         done(e);
@@ -121,17 +119,17 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItems().subscribe();
+    testClient.getItems().subscribe();
   });
 
-  it('resolve default QueryParam variable', (done: (e?: any) => void) => {
+  it('resolve default queryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items2?page=20');
+        expect(resp.url).toBe( '/items2?page=20');
         done();
       } catch (e) {
         done(e);
@@ -139,17 +137,17 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItems2().subscribe();
+    testClient.getItems2().subscribe();
   });
 
-  it('resolve multiple QueryParam variable', (done: (e?: any) => void) => {
+  it('resolve multiple queryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items3?sort=asc&size=20&page=3');
+        expect(resp.url).toBe( '/items3?sort=asc&size=20&page=3');
         done();
       } catch (e) {
         done(e);
@@ -157,18 +155,18 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItems3(3, '20').subscribe();
+    testClient.getItems3(3, '20').subscribe();
 
   });
 
-  it('resolve Collection Format CSV', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT CSV', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/itemsCSV?field=name,desc');
+        expect(resp.url).toBe( '/itemsCSV?field=name,desc');
         done();
       } catch (e) {
         done(e);
@@ -176,18 +174,18 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItemsCSV(['name', 'desc']).subscribe();
+    testClient.getItemsCSV(['name', 'desc']).subscribe();
 
   });
 
-  it('resolve Collection Format SSV', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT SSV', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/itemsSSV?field=name%20desc');
+        expect(resp.url).toBe( '/itemsSSV?field=name%20desc');
         done();
       } catch (e) {
         done(e);
@@ -195,17 +193,17 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItemsSSV(['name', 'desc']).subscribe();
+    testClient.getItemsSSV(['name', 'desc']).subscribe();
   });
 
-  it('resolve Collection Format TSV', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT TSV', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/itemsTSV?field=name%09desc');
+        expect(resp.url).toBe( '/itemsTSV?field=name%09desc');
         done();
       } catch (e) {
         done(e);
@@ -213,18 +211,18 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItemsTSV(['name', 'desc']).subscribe();
+    testClient.getItemsTSV(['name', 'desc']).subscribe();
 
   });
 
-  it('resolve Collection Format PIPES', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT PIPES', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/itemsPIPES?field=name%7Cdesc');
+        expect(resp.url).toBe( '/itemsPIPES?field=name%7Cdesc');
         done();
       } catch (e) {
         done(e);
@@ -232,18 +230,18 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItemsPIPES(['name', 'desc']).subscribe();
+    testClient.getItemsPIPES(['name', 'desc']).subscribe();
 
   });
 
-  it('resolve Collection Format MULTI', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT MULTI', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/itemsMULTI?field=name&field=desc');
+        expect(resp.url).toBe( '/itemsMULTI?field=name&field=desc');
         done();
       } catch (e) {
         done(e);
@@ -251,20 +249,20 @@ describe('@QueryParam', () => {
     });
 
     // Act
-    const result = testClient.getItemsMULTI(['name', 'desc']).subscribe();
+    testClient.getItemsMULTI(['name', 'desc']).subscribe();
   });
 });
 
-describe('@PlainQuery', () => {
+describe('@plainQuery', () => {
 
-  it('resolve PlainQuery as a string', (done: (e?: any) => void) => {
+  it('resolve plainQuery as a string', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientPlainQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items?page=5&filter=name');
+        expect(resp.url).toBe( '/items?page=5&filter=name');
         done();
       } catch (e) {
         done(e);
@@ -272,18 +270,18 @@ describe('@PlainQuery', () => {
     });
 
     // Act
-    const result = testClient.getItems('page=5&filter=name').subscribe();
+    testClient.getItems('page=5&filter=name').subscribe();
 
   });
 
-  it('resolve PlainQuery as a string', (done: (e?: any) => void) => {
+  it('resolve plainQuery as a string', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientPlainQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items?page=5&filter=name');
+        expect(resp.url).toBe( '/items?page=5&filter=name');
         done();
       } catch (e) {
         done(e);
@@ -291,18 +289,18 @@ describe('@PlainQuery', () => {
     });
 
     // Act
-    const result = testClient.getItems('?page=5&filter=name').subscribe();
+    testClient.getItems('?page=5&filter=name').subscribe();
 
   });
 
-  it('resolve PlainQuery as object', (done: (e?: any) => void) => {
+  it('resolve plainQuery as object', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
     });
     const testClient = new TestClientPlainQuery(requestMock, resp => {
       try {
-        assert.equal(resp.url, '/items2?page=5&filter=name');
+        expect(resp.url).toBe( '/items2?page=5&filter=name');
         done();
       } catch (e) {
         done(e);
@@ -310,21 +308,21 @@ describe('@PlainQuery', () => {
     });
 
     // Act
-    const result = testClient.getItems2({page: 5, filter: 'name'}).subscribe();
+    testClient.getItems2({page: 5, filter: 'name'}).subscribe();
 
   });
 });
 
-describe('@Header', () => {
+describe('@header', () => {
 
-  it('resolve Header variable', (done: (e?: any) => void) => {
+  it('resolve header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.deepEqual(resp.headers.getAll('page') as any, ['5']);
+        expect(resp.headers.getAll('page')).toStrictEqual( ['5']);
         done();
       } catch (e) {
         done(e);
@@ -335,14 +333,14 @@ describe('@Header', () => {
     testClient.getItems(5).subscribe();
   });
 
-  it('resolve missing Header variable', (done: (e?: any) => void) => {
+  it('resolve missing header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.isFalse(resp.headers.has('path'));
+        expect(resp.headers.has('path')).toBeFalsy();
         done();
       } catch (e) {
         done(e);
@@ -350,17 +348,17 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItems().subscribe();
+    testClient.getItems().subscribe();
   });
 
-  it('resolve default Header variable', (done: (e?: any) => void) => {
+  it('resolve default header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.deepEqual(resp.headers.getAll('page'), ['20']);
+        expect(resp.headers.getAll('page')).toStrictEqual(  ['20']);
         done();
       } catch (e) {
         done(e);
@@ -368,20 +366,20 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItems2().subscribe();
+    testClient.getItems2().subscribe();
 
   });
 
-  it('resolve multiple Header variable', (done: (e?: any) => void) => {
+  it('resolve multiple header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.deepEqual(resp.headers.getAll('page') as any, ['3']);
-        assert.deepEqual(resp.headers.getAll('sort'), ['asc']);
-        assert.deepEqual(resp.headers.getAll('size'), ['20']);
+        expect(resp.headers.getAll('page')).toStrictEqual( ['3']);
+        expect(resp.headers.getAll('sort')).toStrictEqual( ['asc']);
+        expect(resp.headers.getAll('size')).toStrictEqual(  ['20']);
         done();
       } catch (e) {
         done(e);
@@ -389,7 +387,7 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItems3(3, '20').subscribe();
+    testClient.getItems3(3, '20').subscribe();
 
   });
 
@@ -400,7 +398,7 @@ describe('@Header', () => {
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.equal(resp.headers.get('field'), 'name,desc');
+        expect(resp.headers.get('field')).toBe( 'name,desc');
         done();
       } catch (e) {
         done(e);
@@ -408,17 +406,17 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItemsDefault(['name', 'desc']).subscribe();
+    testClient.getItemsDefault(['name', 'desc']).subscribe();
   });
 
-  it('resolve Collection Format CSV', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT CSV', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.equal(resp.headers.get('field'), 'name,desc');
+        expect(resp.headers.get('field')).toBe('name,desc');
         done();
       } catch (e) {
         done(e);
@@ -426,18 +424,18 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItemsCSV(['name', 'desc']).subscribe();
+    testClient.getItemsCSV(['name', 'desc']).subscribe();
 
   });
 
-  it('resolve Collection Format SSV', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT SSV', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.equal(resp.headers.get('field'), 'name desc');
+        expect(resp.headers.get('field')).toBe( 'name desc');
         done();
       } catch (e) {
         done(e);
@@ -445,18 +443,18 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItemsSSV(['name', 'desc']).subscribe();
+    testClient.getItemsSSV(['name', 'desc']).subscribe();
 
   });
 
-  it('resolve Collection Format TSV', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT TSV', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.equal(resp.headers.get('field'), 'name\tdesc');
+        expect(resp.headers.get('field')).toBe( 'name\tdesc');
         done();
       } catch (e) {
         done(e);
@@ -467,14 +465,14 @@ describe('@Header', () => {
     testClient.getItemsTSV(['name', 'desc']).subscribe();
   });
 
-  it('resolve Collection Format PIPES', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT PIPES', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.equal(resp.headers.get('field'), 'name|desc');
+        expect(resp.headers.get('field')).toBe( 'name|desc');
         done();
       } catch (e) {
         done(e);
@@ -482,17 +480,17 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItemsPIPES(['name', 'desc']).subscribe();
+    testClient.getItemsPIPES(['name', 'desc']).subscribe();
   });
 
-  it('resolve Collection Format MULTI', (done: (e?: any) => void) => {
+  it('resolve Collection FORMAT MULTI', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
     });
     const testClient = new TestClientHeader(requestMock, resp => {
       try {
-        assert.deepEqual(resp.headers.getAll('field'), ['name', 'desc']);
+        expect(resp.headers.getAll('field')).toStrictEqual(  ['name', 'desc']);
         done();
       } catch (e) {
         done(e);
@@ -500,21 +498,21 @@ describe('@Header', () => {
     });
 
     // Act
-    const result = testClient.getItemsMULTI(['name', 'desc']).subscribe();
+    testClient.getItemsMULTI(['name', 'desc']).subscribe();
 
   });
 });
 
-describe('@Body', () => {
+describe('@body', () => {
 
-  it('resolve Body variable', (done: (e?: any) => void) => {
+  it('resolve body variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({body: req.body}));
     });
     const testClient = new TestClientBody(requestMock, resp => {
       try {
-        assert.deepEqual(JSON.parse(resp.body), {name: 'Awesome Item'});
+        expect(JSON.parse(resp.body)).toStrictEqual( {name: 'Awesome Item'});
         done();
       } catch (e) {
         done(e);
@@ -525,14 +523,14 @@ describe('@Body', () => {
     testClient.createItem({name: 'Awesome Item'}).subscribe();
   });
 
-  it('resolve missing Body variable', (done: (e?: any) => void) => {
+  it('resolve missing body variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({body: req.body}));
     });
     const testClient = new TestClientBody(requestMock, resp => {
       try {
-        assert.deepEqual(resp.body, null);
+        expect(resp.body).toBeNull();
         done();
       } catch (e) {
         done(e);
@@ -540,10 +538,10 @@ describe('@Body', () => {
     });
 
     // Act
-    const result = testClient.createItem().subscribe();
+    testClient.createItem().subscribe();
   });
 
-  it('resolve 2 Body variable', () => {
+  it('resolve 2 body variable', () => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({body: req.body}));
@@ -552,10 +550,9 @@ describe('@Body', () => {
 
     // Act
     try {
-      testClient.createItem2({name: 'first'}, {name: 'second'});
-      assert.fail();
+      expect( testClient.createItem2({name: 'first'}, {name: 'second'})).toThrow();
     } catch (e) {
-      assert.equal(e.message, 'Only one @Body is allowed');
+      expect(e.message).toBe( 'Only one @body is allowed');
     }
   });
 });
@@ -590,23 +587,23 @@ class TestClientPath extends RestClient {
     return resp;
   }
 
-  @GET('/items/{id}')
+  @get('/items/{id}')
   // @ts-ignoredd
-  public getItem(@PathParam('id') id?: number): Observable<HttpResponse<any>> {
+  public getItem(@pathParam('id') id?: number): Observable<HttpResponse<any>> {
     return;
   }
 
-  @GET('/items2/{id}')
+  @get('/items2/{id}')
   // @ts-ignore
-  public getItem2(@PathParam('id', {value: 7}) id?: number): Observable<HttpResponse<any>> {
+  public getItem2(@pathParam('id', {value: 7}) id?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/items3/{id}/status/status-{statusName}.{ext}')
+  @get('/items3/{id}/status/status-{statusName}.{ext}')
   // @ts-ignore
-  public getItem3(@PathParam('id') id: number,
-                  @PathParam('statusName') statusName: string,
-                  @PathParam('ext', {value: 'json'}) ext?: string): Observable<HttpResponse<any>> {
+  public getItem3(@pathParam('id') id: number,
+                  @pathParam('statusName') statusName: string,
+                  @pathParam('ext', {value: 'json'}) ext?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -625,53 +622,53 @@ class TestClientQuery extends RestClient {
     return resp;
   }
 
-  @GET('/items')
+  @get('/items')
   // @ts-ignore
-  public getItems(@QueryParam('page') page?: number): Observable<HttpResponse<any>> {
+  public getItems(@queryParam('page') page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/items2')
+  @get('/items2')
   // @ts-ignore
-  public getItems2(@QueryParam('page', '20') page?: number): Observable<HttpResponse<any>> {
+  public getItems2(@queryParam('page', {value: 20}) page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/items3')
+  @get('/items3')
   // @ts-ignore
-  public getItems3(@QueryParam('page') page: number,
-                   @QueryParam('size', {value: 20}) size?: string,
-                   @QueryParam('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
+  public getItems3(@queryParam('page') page: number,
+                   @queryParam('size', {value: 20}) size?: string,
+                   @queryParam('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsCSV')
+  @get('/itemsCSV')
   // @ts-ignore
-  public getItemsCSV(@QueryParam('field', {format: Format.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsCSV(@queryParam('field', {format: FORMAT.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsSSV')
+  @get('/itemsSSV')
   // @ts-ignore
-  public getItemsSSV(@QueryParam('field', {format: Format.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsSSV(@queryParam('field', {format: FORMAT.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsTSV')
+  @get('/itemsTSV')
   // @ts-ignore
-  public getItemsTSV(@QueryParam('field', {format: Format.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsTSV(@queryParam('field', {format: FORMAT.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsPIPES')
+  @get('/itemsPIPES')
   // @ts-ignore
-  public getItemsPIPES(@QueryParam('field', {format: Format.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsPIPES(@queryParam('field', {format: FORMAT.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsMULTI')
+  @get('/itemsMULTI')
   // @ts-ignore
-  public getItemsMULTI(@QueryParam('field', {format: Format.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsMULTI(@queryParam('field', {format: FORMAT.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -694,15 +691,15 @@ class TestClientPlainQuery extends RestClient {
     return resp;
   }
 
-  @GET('/items')
+  @get('/items')
   // @ts-ignore
-  public getItems(@PlainQuery query?: string): Observable<HttpResponse<any>> {
+  public getItems(@plainQuery query?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/items2')
+  @get('/items2')
   // @ts-ignore
-  public getItems2(@PlainQuery query?: AnyQuery): Observable<HttpResponse<any>> {
+  public getItems2(@plainQuery query?: AnyQuery): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -721,59 +718,59 @@ class TestClientHeader extends RestClient {
     return resp;
   }
 
-  @GET('/items')
+  @get('/items')
   // @ts-ignore
-  public getItems(@Header('page') page?: number): Observable<HttpResponse<any>> {
+  public getItems(@header('page') page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/items2')
+  @get('/items2')
   // @ts-ignore
-  public getItems2(@Header('page', '20') page?: number): Observable<HttpResponse<any>> {
+  public getItems2(@header('page', {value: '20'}) page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/items3')
+  @get('/items3')
   // @ts-ignore
-  public getItems3(@Header('page') page: number,
-                   @Header('size', {value: 20}) size?: string,
-                   @Header('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
+  public getItems3(@header('page') page: number,
+                   @header('size', {value: 20}) size?: string,
+                   @header('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsDefault')
+  @get('/itemsDefault')
   // @ts-ignore
-  public getItemsDefault(@Header('field') fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsDefault(@header('field') fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsCSV')
+  @get('/itemsCSV')
   // @ts-ignore
-  public getItemsCSV(@Header('field', {format: Format.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsCSV(@header('field', {format: FORMAT.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsSSV')
+  @get('/itemsSSV')
   // @ts-ignore
-  public getItemsSSV(@Header('field', {format: Format.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsSSV(@header('field', {format: FORMAT.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsTSV')
+  @get('/itemsTSV')
   // @ts-ignore
-  public getItemsTSV(@Header('field', {format: Format.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsTSV(@header('field', {format: FORMAT.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsPIPES')
+  @get('/itemsPIPES')
   // @ts-ignore
-  public getItemsPIPES(@Header('field', {format: Format.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsPIPES(@header('field', {format: FORMAT.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @GET('/itemsMULTI')
+  @get('/itemsMULTI')
   // @ts-ignore
-  public getItemsMULTI(@Header('field', {format: Format.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
+  public getItemsMULTI(@header('field', {format: FORMAT.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -792,16 +789,16 @@ class TestClientBody extends RestClient {
     return resp;
   }
 
-  @POST('/items')
+  @post('/items')
   // @ts-ignore
-  public createItem(@Body body?: any): Observable<HttpResponse<any>> {
-    return null;
+  public createItem(@body bdy?: any): Observable<HttpResponse<any>> {
+    return;
   }
 
-  @GET('/items2')
+  @get('/items2')
   // @ts-ignore
-  public createItem2(@Body body1?: any, @Body body2?: any): Observable<HttpResponse<any>> {
-    return null;
+  public createItem2(@body body1?: any, @body body2?: any): Observable<HttpResponse<any>> {
+    return;
   }
 
 }

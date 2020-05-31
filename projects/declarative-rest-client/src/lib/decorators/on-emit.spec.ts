@@ -1,11 +1,9 @@
-
-import { assert } from 'chai';
 import { map} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { OnEmit } from './on-emit';
-import { GET } from './request-methods';
+import { onEmit } from './on-emit';
+import { get } from './request-methods';
 
 class HttpMock extends HttpClient {
 
@@ -41,8 +39,8 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @GET('/test')
-  @OnEmit(obs => obs.pipe(map(resp => new Item(JSON.parse(resp)))))
+  @get('/test')
+  @onEmit(obs => obs.pipe(map(resp => new Item(JSON.parse(resp)))))
   // @ts-ignore
   public getItems(): Observable<Item> {
     return;
@@ -50,11 +48,11 @@ class TestClient extends RestClient {
 
 }
 
-describe('@OnEmit', () => {
+describe('@onEmit', () => {
 
-  it('verify OnEmit function is called', (done: (e?: any) => void) => {
+  it('verify onEmit function is called', (done: (e?: any) => void) => {
     // Arrange
-    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+    const requestMock = new HttpMock(() => {
       const json: any = { name: 'itemName', desc: 'Some awesome item' };
       return of(new HttpResponse<any>({body: JSON.stringify(json)}));
     });

@@ -4,20 +4,20 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Code scaffolding
 
-Run `ng generate component component-name --project declarative-rest-client` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project declarative-rest-client`.
-> Note: Don't forget to add `--project declarative-rest-client` or else it will be added to the default project in your `angular.json` file. 
+Run `ng generate component component-name --project declarative-rest-restClient` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project declarative-rest-restClient`.
+> Note: Don't forget to add `--project declarative-rest-restClient` or else it will be added to the default project in your `angular.json` file. 
 
 ## Build
 
-Run `ng build declarative-rest-client` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build declarative-rest-restClient` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Publishing
 
-After building your library with `ng build declarative-rest-client`, go to the dist folder `cd dist/declarative-rest-client` and run `npm publish`.
+After building your library with `ng build declarative-rest-restClient`, go to the dist folder `cd dist/declarative-rest-restClient` and run `npm publish`.
 
 ## Running unit tests
 
-Run `ng test declarative-rest-client` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test declarative-rest-restClient` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Further help
 

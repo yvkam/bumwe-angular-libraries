@@ -1,9 +1,8 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
 import { timeout, tap } from 'rxjs/operators';
 import { RestClient } from './rest-client';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { GET, RequestMethod } from './decorators/request-methods';
+import { get, RequestMethod } from './decorators/request-methods';
 
 class HttpMock extends HttpClient {
 
@@ -28,7 +27,7 @@ class TestClient1 extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
+  @get( '/test' )
   // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
@@ -45,7 +44,7 @@ class TestClient2 extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
+  @get( '/test' )
   // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
@@ -69,7 +68,7 @@ class TestClient3 extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
+  @get( '/test' )
   // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
@@ -96,7 +95,7 @@ class TestClient4 extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
+  @get( '/test' )
   // @ts-ignore
   public getItems(): Observable<Response> {
     return null;
@@ -117,7 +116,7 @@ describe( 'RestClient', () => {
 
   it( 'checkSetup', () => {
     // Arrange
-    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+    const requestMock = new HttpMock( () => {
       return of( new HttpResponse() );
     } );
     const testClient  = new TestClient1( requestMock );
@@ -125,14 +124,14 @@ describe( 'RestClient', () => {
     // Act
     testClient.getItems().subscribe();
 // Assert
-    assert.equal( requestMock.callCount, 1 );
-    assert.equal( requestMock.lastRequest.method, RequestMethod.GET );
+    expect( requestMock.callCount).toBe( 1 );
+    expect( requestMock.lastRequest.method.toLowerCase()).toBe( RequestMethod.GET );
 
   } );
 
   it( 'call requestInterceptor', () => {
     // Arrange
-    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+    const requestMock = new HttpMock( () => {
       return of( new HttpResponse<any>( ) );
     } );
     const testClient  = new TestClient2( requestMock );
@@ -140,33 +139,33 @@ describe( 'RestClient', () => {
     // Act
     testClient.getItems();
 // Assert
-    assert.equal( testClient.interceptorCallCount, 1 );
-    assert.equal( testClient.interceptorRequest.method, RequestMethod.GET );
+    expect( testClient.interceptorCallCount).toBe( 1 );
+    expect( testClient.interceptorRequest.method.toLowerCase()).toBe( RequestMethod.GET );
 
   } );
 
   it( 'call requestInterceptor asynchronous', ( done: ( e?: any ) => void ) => {
     // Arrange
-    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+    const requestMock = new HttpMock( () => {
       return of( new HttpResponse<any>( ) );
     } );
     const testClient  = new TestClient3( requestMock );
 
     // Act
     testClient.getItems().subscribe(() => {
-      assert.equal( testClient.timeout, true );
+      expect( testClient.timeout).toBe( true );
       done();
     });
 // Assert
-    assert.equal( testClient.timeout, true );
-    assert.equal( testClient.interceptorCallCount, 1 );
-    assert.equal( testClient.interceptorRequest.method, RequestMethod.GET );
+    expect( testClient.timeout).toBe( true );
+    expect( testClient.interceptorCallCount).toBe( 1 );
+    expect( testClient.interceptorRequest.method.toLowerCase()).toBe( RequestMethod.GET );
 
   } );
 
   it( 'call responseInterceptor', () => {
     // Arrange
-    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+    const requestMock = new HttpMock( () => {
       return of( new HttpResponse<any>( { status: 200 } ) );
     } );
     const testClient  = new TestClient4( requestMock );
@@ -174,7 +173,7 @@ describe( 'RestClient', () => {
     // Act
     testClient.getItems();
 // Assert
-    assert.equal( testClient.interceptorCallCount, 1 );
+    expect( testClient.interceptorCallCount).toBe( 1 );
 
   } );
 } );

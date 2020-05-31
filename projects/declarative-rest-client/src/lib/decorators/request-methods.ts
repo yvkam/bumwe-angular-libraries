@@ -2,69 +2,69 @@ import {methodBuilder} from '../builders/request-builder';
 import {RestClient} from '../rest-client';
 
 export enum RequestMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DECONSTE = 'DECONSTE',
-  PATCH = 'PATCH',
-  HEAD = 'HEAD',
-  OPTIONS = 'OPTIONS',
-  JSONP = 'JSONP'
+  GET = 'get',
+  POST = 'post',
+  PUT = 'put',
+  DECONSTE = 'deconste',
+  PATCH = 'patch',
+  HEAD = 'head',
+  OPTIONS = 'options',
+  JSONP = 'jsonp'
 }
 
 /**
- * GET method
+ * get method
  * @param () => url - resource url of the method
  */
-export const GET: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const get: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.GET);
 
 /**
- * POST method
+ * post method
  * @param () => url - resource url of the method
  */
-export const POST: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const post: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.POST);
 
 /**
- * PUT method
+ * put method
  * @param () => url - resource url of the method
  */
-export const PUT: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const put: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.PUT);
 
 /**
- * PATCH method
+ * patch method
  * @param () => url - resource url of the method
  */
-export const PATCH: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const patch: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.PATCH);
 
 /**
- * DECONSTE method
+ * deconste method
  * @param () => url - resource url of the method
  */
-export const DECONSTE: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const deconste: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.DECONSTE);
 
 /**
- * HEAD method
+ * head method
  * @param () => url - resource url of the method
  */
-export const HEAD: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const head: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.HEAD);
 
 /**
- * OPTIONS method
+ * options method
  * @param () => url - resource url of the method
  */
-export const OPTIONS: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const options: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.OPTIONS);
 
 /**
- * JSONP method
+ * jsonp method
  * @param () => url - resource url of the method
  */
-export const JSONP: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const jsonp: (url: string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
   methodBuilder(RequestMethod.JSONP);
 

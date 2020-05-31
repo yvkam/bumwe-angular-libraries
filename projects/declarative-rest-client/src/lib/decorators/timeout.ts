@@ -2,10 +2,10 @@ import { RestClient } from '../rest-client';
 
 /**
  * Defines a custom timeout function.
- * @param {number} timeout - The timeout duration in milliseconds.
+ * @param  value - The timeout duration in milliseconds.
  */
-export function Timeout( timeout: number ) {
-  return function ( target: RestClient, propertyKey: string, descriptor: any ) {
+export function timeout(value: number ) {
+  return ( target: RestClient, propertyKey: string, descriptor: any ) => {
     if ( !descriptor.timeout ) {
       descriptor.timeout = [];
     }

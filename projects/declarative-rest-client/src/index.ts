@@ -1,8 +1,8 @@
 
-export { RestClient } from './rest-client';
+export { RestClient } from './rest-restClient';
 
 export { Map } from './decorators/map';
-export { Client } from './decorators/client';
+export { Client } from './decorators/restClient';
 export { Headers } from './decorators/headers';
 export { OnEmit } from './decorators/on-emit';
 export { Timeout } from './decorators/timeout';

@@ -1,8 +1,7 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
 import { RestClient } from '../rest-client';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { GET, POST, RequestMethod } from './request-methods';
+import { get, post, RequestMethod } from './request-methods';
 
 class HttpMock extends HttpClient {
 
@@ -27,13 +26,13 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
+  @get( '/test' )
   // @ts-ignore
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @POST( '/test' )
+  @post( '/test' )
   // @ts-ignore
   public createItems(): Observable<HttpResponse<any>> {
     return null;
@@ -41,7 +40,7 @@ class TestClient extends RestClient {
 
 }
 
-describe( '@GET', () => {
+describe( '@get', () => {
 
   it( 'verify request method is set', () => {
     // Arrange
@@ -56,12 +55,12 @@ describe( '@GET', () => {
 
     // Act
     testClient.getItems().subscribe();
-    assert.strictEqual( method, RequestMethod.GET );
-    assert.strictEqual( url, '/test' );
+    expect( method.toLowerCase()).toBe(RequestMethod.GET );
+    expect( url).toBe( '/test' );
   } );
 } );
 
-describe( '@POST', () => {
+describe( '@post', () => {
 
   it( 'verify request method is set', () => {
     // Arrange
@@ -76,7 +75,7 @@ describe( '@POST', () => {
 
     // Act
     testClient.createItems().subscribe();
-    assert.equal( method, RequestMethod.POST );
-    assert.equal( url, '/test' );
+    expect( method.toLowerCase()).toBe( RequestMethod.POST );
+    expect( url).toBe( '/test' );
   } );
 } );

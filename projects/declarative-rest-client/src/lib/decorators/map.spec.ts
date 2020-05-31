@@ -1,9 +1,8 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { GET } from './request-methods';
-import { Map } from './map';
+import { get } from './request-methods';
+import { map } from './map';
 
 class HttpMock extends HttpClient {
 
@@ -39,8 +38,8 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
-  @Map( resp => new Item(JSON.parse(resp)))
+  @get( '/test' )
+  @map(resp => new Item(JSON.parse(resp)))
   // @ts-ignore
   public getItems(): Observable<Item> {
     return;
@@ -48,11 +47,11 @@ class TestClient extends RestClient {
 
 }
 
-describe( '@Map', () => {
+describe( '@map', () => {
 
-  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
+  it( 'verify map function is called', ( done: ( e?: any ) => void ) => {
     // Arrange
-    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+    const requestMock = new HttpMock( () => {
       const json: any = { name: 'itemName', desc: 'Some awesome item' };
       return of( new HttpResponse<any>( { body: JSON.stringify( json ) } ) );
     } );
@@ -64,8 +63,8 @@ describe( '@Map', () => {
     // Assert
     result.subscribe( item => {
       try {
-        assert.equal( item.name, 'itemName' );
-        assert.equal( item.desc, 'Some awesome item' );
+        expect( item.name).toBe( 'itemName' );
+        expect(item.desc).toBe( 'Some awesome item' );
         done();
       } catch ( e ) {
         done( e );

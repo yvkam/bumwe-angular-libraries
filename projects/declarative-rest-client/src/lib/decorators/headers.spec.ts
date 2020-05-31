@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { HttpRequest, HttpResponse, HttpClient } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { GET } from './request-methods';
-import { Headers } from './headers';
+import { get } from './request-methods';
+import { headers } from './headers';
 
 class HttpMock extends HttpClient {
 
@@ -27,8 +27,8 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @GET( '/test' )
-  @Headers( {
+  @get( '/test' )
+  @headers( {
     accept: 'application/json',
     lang: [ 'en', 'nl' ]
   } )
@@ -39,15 +39,15 @@ class TestClient extends RestClient {
 
 }
 
-describe( '@Headers', () => {
+describe( '@headers', () => {
 
   it( 'verify decorator attributes are set', () => {
     // Arrange
-    let headers: {
+    let testHeaders: {
       [name: string]: any;
-    } = {};
+    } ;
     const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      headers = req.headers;
+      testHeaders = req.headers;
       return of( new HttpResponse<any>( { status: 200 } ) );
     } );
     const testClient  = new TestClient( requestMock );
@@ -55,8 +55,8 @@ describe( '@Headers', () => {
     // Act
     testClient.getItems().subscribe();
 // Assert
-    expect(headers.get('accept')).toBe( 'application/json');
-    expect(headers.get('lang')).toBe( 'en,nl');
+    expect(testHeaders.get('accept')).toBe( 'application/json');
+    expect(testHeaders.get('lang')).toBe( 'en,nl');
 
   } );
 } );
