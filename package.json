@@ -8,6 +8,7 @@
     "test": "jest",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "codecov": "./node_modules/.bin/codecov",
     "test:restclient": "jest --coverage --config ./projects/declarative-rest-client/jest.config.js"
   },
   "private": true,
@@ -37,6 +38,7 @@
     "jest": "^26.0.1",
     "jest-preset-angular": "^8.2.0",
     "ng-packagr": "^9.0.0",
+    "protractor": "^7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
