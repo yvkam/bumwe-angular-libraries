@@ -239,9 +239,14 @@ class TestClient extends RestClient {
     return null;
   }
 
-  @Request(
-    {path: '/test', method: RequestMethod.POST},
-    {consumes: ['text/html'], produces: ['application/json'], authenticationTokens: ['jwt1'], tokensToIntercept: ['jwt2']})
+  @Request({
+    path: '/test',
+    method: RequestMethod.POST,
+    consumes: ['text/html'],
+    produces: ['application/json'],
+    authenticationTokens: ['jwt1'],
+    tokensToIntercept: ['jwt2']
+  })
   public getItems1(): Observable<HttpResponse<any>> {
     return;
   }

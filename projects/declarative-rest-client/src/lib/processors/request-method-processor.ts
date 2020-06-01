@@ -3,32 +3,32 @@ import {filter, flatMap, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {RestClient} from '../rest-client';
 import {metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
-import {RequestMethod, RequestMethodOptions} from '../decorators/request-methods';
+import {GenericRequestMethodArgs, RequestMethod, RequestMethodArgs} from '../decorators/request-methods';
 import {buildUrl} from './url-builder';
 import {buildHeaders} from './headers-builder';
 import {buildQueryParams} from './query-params-builder';
 import {buildBody} from './body-builder';
 
 export function requestMethodProcessor(method?: RequestMethod) {
-  return (request: string | RequestMethodArgs, options?: RequestMethodOptions) => {
+  return (annotationArgs: string | RequestMethodArgs) => {
     return (target: RestClient, propertyKey: string, descriptor: any) => {
 
-      descriptor.value = function(...methodArgs: any[]) {
+      descriptor.value = function(...targetMethodArgs: any[]) {
 
-        const metadata = getMetadata(target, propertyKey, methodArgs);
-        const path = getPath(request);
-        const requestMethod = getRequestMethod(method, request);
+        const metadata = getMetadata(target, propertyKey, targetMethodArgs);
+        const path = getPath(annotationArgs);
+        const requestMethod = getRequestMethod(method, annotationArgs);
         const body = buildBody(metadata.body, metadata.plainBody);
         const url = buildUrl(this.getBaseUrl(), path, metadata.pathParams);
         const params = buildQueryParams(url, metadata.queryParams, metadata.plainQueryParams);
-        const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, options);
+        const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, annotationArgs);
 
         let resp = sendRequest.call(this, requestMethod, url, body, params, headers);
 
-        interceptTokens(resp, options);
+        interceptTokens(resp, annotationArgs as RequestMethodArgs);
         resp = addMappers(descriptor, resp);
 
-        resp = addTimeout(descriptor, options, resp);
+        resp = addTimeout(resp, descriptor, annotationArgs as RequestMethodArgs);
 
         resp = addOneEmit(descriptor, resp);
 
@@ -77,7 +77,7 @@ function sendRequest(method: RequestMethod,
   return processEvent.call(this, httpEvent);
 }
 
-function interceptTokens(resp: Observable<HttpEvent<any>>, options: RequestMethodOptions) {
+function interceptTokens(resp: Observable<HttpEvent<any>>, options: RequestMethodArgs) {
   if (options && options.tokensToIntercept) {
     resp.pipe(
       filter((r: HttpEvent<any>) => r.type === HttpEventType.Response),
@@ -96,7 +96,7 @@ function addMappers(descriptor: any, resp) {
   return resp;
 }
 
-function addTimeout(descriptor: any, options: RequestMethodOptions, resp) {
+function addTimeout(resp, descriptor: any, options: RequestMethodArgs) {
   if (descriptor.timeout || (options && options.timeout)) {
     [].concat(descriptor.timeout || options.timeout).forEach((duration: number) => {
       resp = resp.pipe(timeout(duration));
@@ -115,7 +115,7 @@ function addOneEmit(descriptor: any, resp) {
 }
 
 function getRequestMethod(method: RequestMethod, request: string | RequestMethodArgs) {
-  return method || (request as RequestMethodArgs).method;
+  return method || (request as GenericRequestMethodArgs).method;
 }
 
 function getPath(request: string | RequestMethodArgs) {
@@ -143,11 +143,5 @@ function enrichMetadata(metadata: ParameterMetadata[], methodArgs: any[]): Param
   }
 
   return metadata.map(m => Object.assign({}, m, {value: methodArgs[m.index] || m.value}));
-}
-
-
-export interface RequestMethodArgs {
-  path: string;
-  method: RequestMethod;
 }
 
