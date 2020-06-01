@@ -1,12 +1,12 @@
 import {ParameterMetadata} from '../decorators/parameters';
-import {RequestMethodOptions} from '../decorators/request-methods';
 import {HttpHeaders} from '@angular/common/http';
 import {formatData} from './format-data';
+import {RequestMethodArgs} from '../decorators/request-methods';
 
 export function buildHeaders(classLevelHeaders,
                              methodLevelHeaders,
                              headerMetadata: ParameterMetadata[],
-                             options?: RequestMethodOptions): HttpHeaders {
+                             options?: RequestMethodArgs): HttpHeaders {
 
   let headers = new HttpHeaders(classLevelHeaders);
 

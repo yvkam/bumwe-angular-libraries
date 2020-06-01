@@ -21,7 +21,7 @@ export function requestMethodProcessor(method?: RequestMethod) {
         const body = buildBody(metadata.body, metadata.plainBody);
         const url = buildUrl(this.getBaseUrl(), path, metadata.pathParams);
         const params = buildQueryParams(url, metadata.queryParams, metadata.plainQueryParams);
-        const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, annotationArgs);
+        const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, annotationArgs as RequestMethodArgs);
 
         let resp = sendRequest.call(this, requestMethod, url, body, params, headers);
 
