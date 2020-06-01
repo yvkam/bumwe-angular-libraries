@@ -72,8 +72,9 @@ export interface RequestMethodArgs {
   produces?: string[];
   consumes?: string[];
   timeout?: number;
-  authenticationTokens?: string[];
-  tokensToIntercept?: string[];
+  httpResponse?: boolean;
+  requestAuthHeaders?: string[];
+  responseAuthHeaders?: string[];
 }
 
 export interface GenericRequestMethodArgs extends RequestMethodArgs{

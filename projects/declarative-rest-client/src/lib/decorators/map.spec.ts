@@ -1,8 +1,57 @@
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { Get } from './request-methods';
+import {Get, Post} from './request-methods';
 import { Map } from './map';
+
+describe( '@Map', () => {
+
+  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    const requestMock = new HttpMock( () => {
+      const json: any = { name: 'itemName', desc: 'Some awesome item' };
+      return of( new HttpResponse<any>( { body: JSON.stringify( json ) } ) );
+    } );
+    const testClient  = new TestClient( requestMock );
+
+    // Act
+    const result = testClient.getItems();
+
+    // Assert
+    result.subscribe( item => {
+      try {
+        expect(item).toBeInstanceOf(Item);
+        expect(item.name).toBe( 'itemName' );
+        expect(item.desc).toBe( 'Some awesome item' );
+        done();
+      } catch ( e ) {
+        done( e );
+      }
+    } );
+  } );
+
+  it( 'verify Map function is applied and full HttpResponse returned', ( done: ( e?: any ) => void ) => {
+    // Arrange
+    const requestMock = new HttpMock( () => {
+      const json: any = { name: 'itemName', desc: 'Some awesome item' };
+      return of(new HttpResponse<any>({ status: 201, body: JSON.stringify(json) }));
+    } );
+    const testClient  = new TestClient( requestMock );
+
+    // Act
+    const result = testClient.postItemsHttpResponse();
+
+    // Assert
+    result.subscribe( (res: HttpResponse<any>) => {
+      expect(res).toBeInstanceOf(HttpResponse);
+      expect(res.body).toBeInstanceOf(Item);
+      expect(res.body.name).toBe('itemName');
+      expect(res.body.desc).toBe('Some awesome item');
+      done();
+    } );
+  } );
+
+} );
 
 class HttpMock extends HttpClient {
 
@@ -44,30 +93,13 @@ class TestClient extends RestClient {
     return;
   }
 
+  @Post( {
+    path: '/test',
+    httpResponse: true
+  } )
+  @Map(resp => new Item(JSON.parse(resp)))
+  public postItemsHttpResponse(): Observable<any> {
+    return;
+  }
+
 }
-
-describe( '@Map', () => {
-
-  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
-    // Arrange
-    const requestMock = new HttpMock( () => {
-      const json: any = { name: 'itemName', desc: 'Some awesome item' };
-      return of( new HttpResponse<any>( { body: JSON.stringify( json ) } ) );
-    } );
-    const testClient  = new TestClient( requestMock );
-
-    // Act
-    const result = testClient.getItems();
-
-    // Assert
-    result.subscribe( item => {
-      try {
-        expect( item.name).toBe( 'itemName' );
-        expect(item.desc).toBe( 'Some awesome item' );
-        done();
-      } catch ( e ) {
-        done( e );
-      }
-    } );
-  } );
-} );

@@ -6,10 +6,7 @@ import { RestClient } from '../rest-client';
  */
 export function timeout(value: number) {
   return ( target: RestClient, propertyKey: string, descriptor: any ) => {
-    if ( !descriptor.timeout ) {
-      descriptor.timeout = [];
-    }
-    descriptor.timeout.push(timeout);
+    descriptor.timeout = timeout;
     return descriptor;
   };
 }

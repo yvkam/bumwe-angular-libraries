@@ -1,12 +1,11 @@
 import {ParameterMetadata} from '../decorators/parameters';
 import {HttpHeaders} from '@angular/common/http';
 import {formatData} from './format-data';
-import {RequestMethodArgs} from '../decorators/request-methods';
 
 export function buildHeaders(classLevelHeaders,
                              methodLevelHeaders,
                              headerMetadata: ParameterMetadata[],
-                             options?: RequestMethodArgs): HttpHeaders {
+                             options?: any): HttpHeaders {
 
   let headers = new HttpHeaders(classLevelHeaders);
 
@@ -31,8 +30,8 @@ export function buildHeaders(classLevelHeaders,
       headers = headers.set('content-type', options.produces.join(',') + '');
     }
 
-    if (options.authenticationTokens && options.authenticationTokens.length > 0) {
-      options.authenticationTokens
+    if (options.requestAuthHeaders && options.requestAuthHeaders.length > 0) {
+      options.requestAuthHeaders
         .map(t => [t, sessionStorage.getItem(t)])
         .filter(([k, v]) => !!v)
         .forEach(([k, v]) => headers = headers.set(k, v + ''));

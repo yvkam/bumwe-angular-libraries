@@ -1,8 +1,8 @@
 /*
- * Public API Surface of declarative-rest-restClient
+ * Public API Surface of declarative-rest-client
  */
 
-export * from './lib/declarative-rest-restClient.module';
+export * from './lib/declarative-rest-client.module';
 
 export * from './lib/rest-client';
 

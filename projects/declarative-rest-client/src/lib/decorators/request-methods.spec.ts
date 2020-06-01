@@ -207,7 +207,7 @@ describe('@Request', () => {
 
     // assertions
     expect(headers.get('jwt1')).toBe('1');
-    // expect(sessionStorage.getItem('jwt2')).toBe('2');
+    expect(sessionStorage.getItem('jwt2')).toBe('2');
   });
 });
 
@@ -244,8 +244,8 @@ class TestClient extends RestClient {
     method: RequestMethod.POST,
     consumes: ['text/html'],
     produces: ['application/json'],
-    authenticationTokens: ['jwt1'],
-    tokensToIntercept: ['jwt2']
+    requestAuthHeaders: ['jwt1'],
+    responseAuthHeaders: ['jwt2']
   })
   public getItems1(): Observable<HttpResponse<any>> {
     return;

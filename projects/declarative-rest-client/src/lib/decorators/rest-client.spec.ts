@@ -4,6 +4,26 @@ import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { restClient } from './rest-client';
 
+describe('@restClient', () => {
+
+  it('verify decorator attributes are added to the Request', () => {
+    // Arrange
+    const requestMock = new HttpMock(() => {
+      return of(new HttpResponse<any>({status: 200}));
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Assert
+    expect(testClient.getServiceIdWrapper()).toBe( 'customer-service');
+    expect(testClient.getBaseUrlWrapper()).toBe( '/api/v1/customers');
+    expect(testClient.isWithCredentialsWrapper()).toBeFalsy();
+    expect(testClient.getDefaultHeadersWrapper() as any).toStrictEqual ({
+      'content-type': 'application/json'
+    });
+
+  });
+});
+
 class HttpMock extends HttpClient {
 
   public callCount = 0;
@@ -56,23 +76,3 @@ class TestClient extends RestClient {
   }
 
 }
-
-describe('@restClient', () => {
-
-  it('verify decorator attributes are added to the Request', () => {
-    // Arrange
-    const requestMock = new HttpMock(() => {
-      return of(new HttpResponse<any>({status: 200}));
-    });
-    const testClient = new TestClient(requestMock);
-
-    // Assert
-    expect(testClient.getServiceIdWrapper()).toBe( 'customer-service');
-    expect(testClient.getBaseUrlWrapper()).toBe( '/api/v1/customers');
-    expect(testClient.isWithCredentialsWrapper()).toBeFalsy();
-    expect(testClient.getDefaultHeadersWrapper() as any).toStrictEqual ({
-      'content-type': 'application/json'
-    });
-
-  });
-});

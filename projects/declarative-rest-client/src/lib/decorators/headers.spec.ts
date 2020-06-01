@@ -4,6 +4,28 @@ import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Headers } from './headers';
 
+
+
+describe( '@Headers', () => {
+
+  it( 'verify decorator attributes are set', () => {
+    // Arrange
+    let testHeaders: any ;
+    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      testHeaders = req.headers;
+      return of( new HttpResponse<any>( { status: 200 } ) );
+    } );
+    const testClient  = new TestClient(requestMock);
+
+    // Act
+    testClient.getItems().subscribe();
+// Assert
+    expect(testHeaders.get('accept')).toBe( 'application/json');
+    expect(testHeaders.get('lang')).toBe( 'en,nl');
+
+  } );
+} );
+
 class HttpMock extends HttpClient {
 
   public callCount = 0;
@@ -38,23 +60,3 @@ class TestClient extends RestClient {
   }
 
 }
-
-describe( '@Headers', () => {
-
-  it( 'verify decorator attributes are set', () => {
-    // Arrange
-    let testHeaders: any ;
-    const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
-      testHeaders = req.headers;
-      return of( new HttpResponse<any>( { status: 200 } ) );
-    } );
-    const testClient  = new TestClient(requestMock);
-
-    // Act
-    testClient.getItems().subscribe();
-// Assert
-    expect(testHeaders.get('accept')).toBe( 'application/json');
-    expect(testHeaders.get('lang')).toBe( 'en,nl');
-
-  } );
-} );

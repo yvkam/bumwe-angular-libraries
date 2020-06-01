@@ -1,5 +1,5 @@
-import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 /**
  * RestClient class.

@@ -1,5 +1,5 @@
-import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
-import {filter, flatMap, map, mergeMap, tap, timeout} from 'rxjs/operators';
+import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
+import {flatMap, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {RestClient} from '../rest-client';
 import {metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
@@ -8,6 +8,20 @@ import {buildUrl} from './url-builder';
 import {buildHeaders} from './headers-builder';
 import {buildQueryParams} from './query-params-builder';
 import {buildBody} from './body-builder';
+
+function applyMapDecorator(mapper: (resp: any) => any,
+                           annotationArgs,
+                           response: Observable<HttpResponse<any>>): Observable<any> {
+  const httpResponse = annotationArgs ? annotationArgs.httpResponse : false;
+  return response.pipe(
+    map((r: HttpResponse<any>) => r.clone({body: mapper(r.body)})),
+    map((r: HttpResponse<any>) => httpResponse ? r : r.body)
+  );
+}
+
+function applyOnEmitDecorator(emitters, response: Observable<HttpResponse<any>>) {
+  return emitters.reduce((resp, handler) => handler(resp), response);
+}
 
 export function requestMethodProcessor(method?: RequestMethod) {
   return (annotationArgs: string | RequestMethodArgs) => {
@@ -21,18 +35,19 @@ export function requestMethodProcessor(method?: RequestMethod) {
         const body = buildBody(metadata.body, metadata.plainBody);
         const url = buildUrl(this.getBaseUrl(), path, metadata.pathParams);
         const params = buildQueryParams(url, metadata.queryParams, metadata.plainQueryParams);
-        const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, annotationArgs as RequestMethodArgs);
+        const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, annotationArgs);
+        const timeoutValue = getTimeout(descriptor, annotationArgs);
+        const responseAuthHeaders = getResponseAuthHeaders(annotationArgs);
+        const mapper = getMapper(descriptor);
+        const emitters = descriptor.emitters || [];
 
-        let resp = sendRequest.call(this, requestMethod, url, body, params, headers);
+        // Make the HTTP request
+        const response = sendRequest.call(this, requestMethod, url, body, params, headers, {
+          timeoutValue,
+          responseAuthHeaders
+        }) as Observable<HttpResponse<any>>;
 
-        interceptTokens(resp, annotationArgs as RequestMethodArgs);
-        resp = addMappers(descriptor, resp);
-
-        resp = addTimeout(resp, descriptor, annotationArgs as RequestMethodArgs);
-
-        resp = addOneEmit(descriptor, resp);
-
-        return resp;
+        return applyOnEmitDecorator(emitters, applyMapDecorator(mapper, annotationArgs, response));
       };
 
       return descriptor;
@@ -45,23 +60,17 @@ function addRequestInterceptor(request: HttpRequest<unknown>): Observable<HttpRe
   return interceptedRequest ? interceptedRequest : of(request);
 }
 
-function processEvent(httpEvent: Observable<HttpEvent<any>>): Observable<HttpEvent<any>> {
-  return httpEvent.pipe(
-    flatMap(e => e instanceof HttpResponse ? processResponse.call(this, e) as Observable<HttpResponse<any>> : httpEvent)
-  );
-}
-
-function processResponse(httpResponse: HttpResponse<any>): Observable<HttpResponse<any>> {
-  const interceptedResponse = this.responseInterceptor(httpResponse);
-  const response = interceptedResponse  || of(httpResponse);
-  return response.pipe(map((resp: HttpResponse<any>) => resp.body));
+function addResponseInterceptor(httpResponse: HttpResponse<any>): Observable<HttpResponse<any>> {
+  const interceptedResponse$ = this.responseInterceptor(httpResponse);
+  return interceptedResponse$ || of(httpResponse);
 }
 
 function sendRequest(method: RequestMethod,
                      url: string,
                      body,
                      params: HttpParams,
-                     headers: HttpHeaders): Observable<HttpEvent<any>> {
+                     headers: HttpHeaders,
+                     options?: { timeoutValue?: number, responseAuthHeaders?: string[] }): Observable<HttpEvent<any>> {
 
   const request = new HttpRequest(method, url, body, {
     headers,
@@ -69,49 +78,36 @@ function sendRequest(method: RequestMethod,
     withCredentials: this.isWithCredentials()
   });
 
-  // make the Request and store the httpEvent for later transformation
-  const httpEvent = addRequestInterceptor.call(this, request).pipe(
+  return addRequestInterceptor.call(this, request).pipe(
     mergeMap((req: HttpRequest<any>) => (this.httpClient as HttpClient).request(req)),
+    timeout(options.timeoutValue),
+    tap((r: HttpResponse<any>) => options.responseAuthHeaders.forEach(token => sessionStorage.setItem(token, r.headers.get(token)))),
+    flatMap(e => addResponseInterceptor.call(this, e) as Observable<HttpResponse<any>>),
   );
 
-  return processEvent.call(this, httpEvent);
 }
 
-function interceptTokens(resp: Observable<HttpEvent<any>>, options: RequestMethodArgs) {
-  if (options && options.tokensToIntercept) {
-    resp.pipe(
-      filter((r: HttpEvent<any>) => r.type === HttpEventType.Response),
-      tap((r: HttpResponse<any>) => options.tokensToIntercept.forEach(token => sessionStorage.setItem(token, r.headers.get(token))
-      ))
-    );
+function getMapper(descriptor: any): (resp) => any {
+  if (descriptor.mapper) {
+    return descriptor.mapper;
   }
+
+  return x => x;
 }
 
-function addMappers(descriptor: any, resp) {
-  if (descriptor.mappers) {
-    descriptor.mappers.forEach((mapper: (resp: any) => any) => {
-      resp = resp.pipe(map(mapper));
-    });
-  }
-  return resp;
+function getResponseAuthHeaders(options: any): string[] {
+  return options ? options.responseAuthHeaders || [] : [];
 }
 
-function addTimeout(resp, descriptor: any, options: RequestMethodArgs) {
-  if (descriptor.timeout || (options && options.timeout)) {
-    [].concat(descriptor.timeout || options.timeout).forEach((duration: number) => {
-      resp = resp.pipe(timeout(duration));
-    });
+function getTimeout(descriptor: any, options: any): number {
+  if (descriptor.timeout) {
+    return descriptor.timeout;
   }
-  return resp;
-}
 
-function addOneEmit(descriptor: any, resp) {
-  if (descriptor.emitters) {
-    descriptor.emitters.forEach((handler: (resp: Observable<any>) => Observable<any>) => {
-      resp = handler(resp);
-    });
+  if (options && options.timeout) {
+    return options.timeout;
   }
-  return resp;
+  return 30000;
 }
 
 function getRequestMethod(method: RequestMethod, request: string | RequestMethodArgs) {
