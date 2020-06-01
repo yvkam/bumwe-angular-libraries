@@ -1,5 +1,5 @@
-import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
 
 /**
  * RestClient class.
@@ -30,10 +30,10 @@ export abstract class RestClient {
    * Request Interceptor
    *
    * @method requestInterceptor
-   * @param request - request object
+   * @param request - Request object
    */
-  protected requestInterceptor(request: HttpRequest<any>): HttpRequest<any>|Observable<HttpRequest<any>> {
-    return request;
+  protected requestInterceptor(request: HttpRequest<any>): Observable<HttpRequest<any>> {
+    return;
   }
 
   /**
@@ -43,7 +43,7 @@ export abstract class RestClient {
    * @param response - response object
    * @returns res - transformed response object
    */
-  protected responseInterceptor(response: Observable<HttpResponse<any>>): Observable<any> {
-    return response;
+  protected responseInterceptor(response: HttpResponse<any>): Observable<HttpResponse<any>> {
+    return;
   }
 }

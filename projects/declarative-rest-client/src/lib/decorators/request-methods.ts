@@ -1,84 +1,77 @@
-import {methodBuilder, RequestMethodArgs} from '../builders/request-builder';
+import {requestMethodProcessor, RequestMethodArgs} from '../processors/request-method-processor';
 import {RestClient} from '../rest-client';
 
 export enum RequestMethod {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',
-  DECONSTE = 'DECONSTE',
+  TRACE = 'TRACE',
   PATCH = 'PATCH',
   HEAD = 'HEAD',
-  OPTIONS = 'OPTIONS',
-  JSONP = 'JSONP'
+  OPTIONS = 'OPTIONS'
 }
 
 /**
- * get method
+ * Get method
  * @param () => url - resource url of the method
  */
-export const request: (request: RequestMethodArgs, options?: RequestMethodOptions) =>
-  (target: RestClient, propertyKey: string, descriptor: any) => any = methodBuilder();
+export const Request: (request: RequestMethodArgs, options?: RequestMethodOptions) =>
+  (target: RestClient, propertyKey: string, descriptor: any) => any = requestMethodProcessor();
 
 /**
- * get method
+ * Get method
  * @param () => url - resource url of the method
  */
-export const get: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.GET);
+export const Get: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.GET);
 
 /**
- * post method
+ * Post method
  * @param () => url - resource url of the method
  */
-export const post: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.POST);
+export const Post: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.POST);
 
 /**
- * put method
+ * Put method
  * @param () => url - resource url of the method
  */
-export const put: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.PUT);
+export const Put: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.PUT);
 
 /**
- * patch method
+ * Patch method
  * @param () => url - resource url of the method
  */
-export const patch: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.PATCH);
+export const Patch: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.PATCH);
 
 /**
- * deconste method
+ * Trace method
  * @param () => url - resource url of the method
  */
-export const deconste: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.DECONSTE);
+export const Trace: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.TRACE);
 
 /**
- * head method
+ * Head method
  * @param () => url - resource url of the method
  */
-export const head: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.HEAD);
+export const Head: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.HEAD);
 
 /**
- * options method
+ * Options method
  * @param () => url - resource url of the method
  */
-export const options: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.OPTIONS);
+export const Options: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.OPTIONS);
 
-/**
- * jsonp method
- * @param () => url - resource url of the method
- */
-export const jsonp: (path: string, options?: RequestMethodOptions) => (target: RestClient, propertyKey: string, descriptor: any) => any =
-  methodBuilder(RequestMethod.JSONP);
 
 export interface RequestMethodOptions {
   produces?: string[];
   consumes?: string[];
   timeout?: number;
-  tokensToSend?: string[];
+  authenticationTokens?: string[];
   tokensToIntercept?: string[];
 }

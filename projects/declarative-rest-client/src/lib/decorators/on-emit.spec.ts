@@ -2,8 +2,8 @@ import { map} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { onEmit } from './on-emit';
-import { get } from './request-methods';
+import { OnEmit } from './on-emit';
+import { Get } from './request-methods';
 
 class HttpMock extends HttpClient {
 
@@ -39,18 +39,17 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @get('/test')
-  @onEmit(obs => obs.pipe(map(resp => new Item(JSON.parse(resp)))))
-  // @ts-ignore
+  @Get('/test')
+  @OnEmit(obs => obs.pipe(map(resp => new Item(JSON.parse(resp)))))
   public getItems(): Observable<Item> {
     return;
   }
 
 }
 
-describe('@onEmit', () => {
+describe('@OnEmit', () => {
 
-  it('verify onEmit function is called', (done: (e?: any) => void) => {
+  it('verify OnEmit function is called', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock(() => {
       const json: any = { name: 'itemName', desc: 'Some awesome item' };

@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { get } from './request-methods';
+import { Get } from './request-methods';
 import { restClient } from './rest-client';
 
 class HttpMock extends HttpClient {
@@ -28,15 +28,13 @@ class HttpMock extends HttpClient {
     'content-type': 'application/json'
   }
 })
-// @ts-ignore
 class TestClient extends RestClient {
 
   constructor( httpHandler: HttpClient ) {
     super( httpHandler );
   }
 
-  @get('/test')
-  // @ts-ignore
+  @Get('/test')
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
@@ -61,7 +59,7 @@ class TestClient extends RestClient {
 
 describe('@restClient', () => {
 
-  it('verify decorator attributes are added to the request', () => {
+  it('verify decorator attributes are added to the Request', () => {
     // Arrange
     const requestMock = new HttpMock(() => {
       return of(new HttpResponse<any>({status: 200}));

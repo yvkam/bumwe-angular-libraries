@@ -1,11 +1,11 @@
 import {Observable, of} from 'rxjs';
 import {RestClient} from '../rest-client';
 import {HttpClient, HttpHeaders, HttpRequest, HttpResponse} from '@angular/common/http';
-import {get, post, request, RequestMethod} from './request-methods';
+import {Get, Head, Options, Patch, Post, Put, Request, RequestMethod, Trace} from './request-methods';
 
-describe('@get', () => {
+describe('@Get', () => {
 
-  it('verify request method is set', () => {
+  it('verify Request method is set', () => {
     // Arrange
     let method;
     let url;
@@ -23,9 +23,9 @@ describe('@get', () => {
   });
 });
 
-describe('@post', () => {
+describe('@Post', () => {
 
-  it('verify request method is set', () => {
+  it('verify Request method is set', () => {
     // Arrange
     let method;
     let url;
@@ -43,9 +43,109 @@ describe('@post', () => {
   });
 });
 
-describe('@request', () => {
+describe('@Put', () => {
 
-  it('verify request method is set', () => {
+  it('verify Request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+      method = req.method;
+      url = req.url;
+      return of(new HttpResponse<any>());
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Act
+    testClient.putItems().subscribe();
+    expect(method).toBe(RequestMethod.PUT);
+    expect(url).toBe('/test');
+  });
+});
+
+describe('@Patch', () => {
+
+  it('verify Request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+      method = req.method;
+      url = req.url;
+      return of(new HttpResponse<any>());
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Act
+    testClient.patchItems().subscribe();
+    expect(method).toBe(RequestMethod.PATCH);
+    expect(url).toBe('/test');
+  });
+});
+
+describe('@Trace', () => {
+
+  it('verify Request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+      method = req.method;
+      url = req.url;
+      return of(new HttpResponse<any>());
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Act
+    testClient.traceItems().subscribe();
+    expect(method).toBe(RequestMethod.TRACE);
+    expect(url).toBe('/test');
+  });
+});
+
+describe('@Head', () => {
+
+  it('verify Request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+      method = req.method;
+      url = req.url;
+      return of(new HttpResponse<any>());
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Act
+    testClient.headItems().subscribe();
+    expect(method).toBe(RequestMethod.HEAD);
+    expect(url).toBe('/test');
+  });
+});
+
+describe('@Options', () => {
+
+  it('verify Request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+      method = req.method;
+      url = req.url;
+      return of(new HttpResponse<any>());
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Act
+    testClient.optionsItems().subscribe();
+    expect(method).toBe(RequestMethod.OPTIONS);
+    expect(url).toBe('/test');
+  });
+});
+
+describe('@Request', () => {
+
+  it('verify Request method is set', () => {
     // Arrange
     let method;
     let url;
@@ -82,7 +182,7 @@ describe('@request', () => {
     let headers: HttpHeaders;
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       headers = req.headers;
-      return of(new HttpResponse<any>({body: 'body', headers: new HttpHeaders({'jwt2': '2'})}));
+      return of(new HttpResponse<any>({body: 'Body', headers: new HttpHeaders({jwt2: '2'})}));
     });
     const testClient = new TestClient(requestMock);
     Object.defineProperty(window, 'sessionStorage', {
@@ -134,23 +234,45 @@ class TestClient extends RestClient {
     super(httpHandler);
   }
 
-  @get('/test')
-  // @ts-ignore
+  @Get('/test')
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @request(
+  @Request(
     {path: '/test', method: RequestMethod.POST},
-    {consumes: ['text/html'], produces: ['application/json'], tokensToSend: ['jwt1'], tokensToIntercept: ['jwt2']})
-  // @ts-ignore
+    {consumes: ['text/html'], produces: ['application/json'], authenticationTokens: ['jwt1'], tokensToIntercept: ['jwt2']})
   public getItems1(): Observable<HttpResponse<any>> {
     return;
   }
 
-  @post('/test')
-  // @ts-ignore
+  @Post('/test')
   public createItems(): Observable<HttpResponse<any>> {
+    return;
+  }
+
+  @Put('/test')
+  public putItems(): Observable<HttpResponse<any>> {
+    return;
+  }
+
+  @Patch('/test')
+  public patchItems(): Observable<HttpResponse<any>> {
+    return;
+  }
+
+  @Head('/test')
+  public headItems(): Observable<HttpResponse<any>> {
+    return;
+  }
+
+  @Options('/test')
+  public optionsItems(): Observable<HttpResponse<any>> {
+    return;
+  }
+
+  @Trace('/test')
+  public traceItems(): Observable<HttpResponse<any>> {
     return;
   }
 

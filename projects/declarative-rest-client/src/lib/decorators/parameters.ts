@@ -16,34 +16,34 @@ export const metadataKeySuffix = {
 export const pathParam = paramBuilder(metadataKeySuffix.pathParam);
 
 /**
- * queryParam value of a method's url, type: string
+ * QueryParam value of a method's url, type: string
  * @param  key - query key to bind value
  */
-export const queryParam = paramBuilder(metadataKeySuffix.queryParam);
+export const QueryParam = paramBuilder(metadataKeySuffix.queryParam);
 
 /**
- * queryParam value of a method's url,
+ * QueryParam value of a method's url,
  * type: key-value pair object or key-value pair string separated by '&'
  */
-export const plainQuery = paramBuilder(metadataKeySuffix.plainQuery)(metadataKeySuffix.plainQuery);
+export const PlainQuery = paramBuilder(metadataKeySuffix.plainQuery)(metadataKeySuffix.plainQuery);
 
 /**
- * body of a REST method, type: key-value pair object
- * Only one body per method!
+ * Body of a REST method, type: key-value pair object
+ * Only one Body per method!
  */
-export const body = paramBuilder(metadataKeySuffix.body)(metadataKeySuffix.body);
+export const Body = paramBuilder(metadataKeySuffix.body)(metadataKeySuffix.body);
 
 /**
- * body of a REST method, type: key-value pair string separated by '&'
- * Only one body per method!
+ * Body of a REST method, type: key-value pair string separated by '&'
+ * Only one Body per method!
  */
-export const plainBody = paramBuilder(metadataKeySuffix.plainBody)(metadataKeySuffix.plainBody);
+export const PlainBody = paramBuilder(metadataKeySuffix.plainBody)(metadataKeySuffix.plainBody);
 
 /**
- * Custom header of a REST method, type: string
- * @param key - header key to bind value
+ * Custom Header of a REST method, type: string
+ * @param key - Header key to bind value
  */
-export const header = paramBuilder(metadataKeySuffix.header);
+export const Header = paramBuilder(metadataKeySuffix.header);
 
 
 /**

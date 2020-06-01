@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { get } from './request-methods';
-import { map } from './map';
+import { Get } from './request-methods';
+import { Map } from './map';
 
 class HttpMock extends HttpClient {
 
@@ -38,18 +38,17 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @get( '/test' )
-  @map(resp => new Item(JSON.parse(resp)))
-  // @ts-ignore
+  @Get( '/test' )
+  @Map(resp => new Item(JSON.parse(resp)))
   public getItems(): Observable<Item> {
     return;
   }
 
 }
 
-describe( '@map', () => {
+describe( '@Map', () => {
 
-  it( 'verify map function is called', ( done: ( e?: any ) => void ) => {
+  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
     // Arrange
     const requestMock = new HttpMock( () => {
       const json: any = { name: 'itemName', desc: 'Some awesome item' };

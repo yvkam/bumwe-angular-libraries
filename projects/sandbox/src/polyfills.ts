@@ -29,11 +29,11 @@
 // import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 
 /**
- * By default, zone.js will patch all possible macroTask and DomEvents
- * user can disable parts of macroTask/DomEvents patch by setting following flags
+ * By default, zone.js will Patch all possible macroTask and DomEvents
+ * user can disable parts of macroTask/DomEvents Patch by setting following flags
  * because those flags need to be set before `zone.js` being loaded, and webpack
- * will put import in the top of bundle, so user need to create a separate file
- * in this directory (for example: zone-flags.ts), and put the following flags
+ * will Put import in the top of bundle, so user need to create a separate file
+ * in this directory (for example: zone-flags.ts), and Put the following flags
  * into that file, and then add the following code before importing zone.js.
  * import './zone-flags';
  *
@@ -41,12 +41,12 @@
  *
  * The following flags will work for all browsers.
  *
- * (window as any).__Zone_disable_requestAnimationFrame = true; // disable patch requestAnimationFrame
- * (window as any).__Zone_disable_on_property = true; // disable patch onProperty such as onclick
- * (window as any).__zone_symbol__UNPATCHED_EVENTS = ['scroll', 'mousemove']; // disable patch specified eventNames
+ * (window as any).__Zone_disable_requestAnimationFrame = true; // disable Patch requestAnimationFrame
+ * (window as any).__Zone_disable_on_property = true; // disable Patch onProperty such as onclick
+ * (window as any).__zone_symbol__UNPATCHED_EVENTS = ['scroll', 'mousemove']; // disable Patch specified eventNames
  *
  *  in IE/Edge developer tools, the addEventListener will also be wrapped by zone.js
- *  with the following flag, it will bypass `zone.js` patch for IE/Edge
+ *  with the following flag, it will bypass `zone.js` Patch for IE/Edge
  *
  *  (window as any).__Zone_enable_cross_context_check = true;
  *

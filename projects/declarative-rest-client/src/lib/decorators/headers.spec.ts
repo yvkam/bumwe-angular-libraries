@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { HttpRequest, HttpResponse, HttpClient } from '@angular/common/http';
 import { RestClient } from '../rest-client';
-import { get } from './request-methods';
-import { headers } from './headers';
+import { Get } from './request-methods';
+import { Headers } from './headers';
 
 class HttpMock extends HttpClient {
 
@@ -27,8 +27,8 @@ class TestClient extends RestClient {
     super( httpHandler );
   }
 
-  @get( '/test' )
-  @headers( {
+  @Get( '/test' )
+  @Headers( {
     accept: 'application/json',
     lang: [ 'en', 'nl' ]
   } )
@@ -39,7 +39,7 @@ class TestClient extends RestClient {
 
 }
 
-describe( '@headers', () => {
+describe( '@Headers', () => {
 
   it( 'verify decorator attributes are set', () => {
     // Arrange

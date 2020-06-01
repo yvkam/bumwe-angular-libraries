@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import { timeout, tap } from 'rxjs/operators';
 import { RestClient } from './rest-client';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { get, RequestMethod } from './decorators/request-methods';
+import { Get, RequestMethod } from './decorators/request-methods';
 
 class HttpMock extends HttpClient {
 
@@ -27,8 +27,7 @@ class TestClient1 extends RestClient {
     super( httpHandler );
   }
 
-  @get( '/test' )
-  // @ts-ignore
+  @Get( '/test' )
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
@@ -44,16 +43,15 @@ class TestClient2 extends RestClient {
     super( httpHandler );
   }
 
-  @get( '/test' )
-  // @ts-ignore
+  @Get( '/test' )
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 
-  protected requestInterceptor( req: HttpRequest<any> ): HttpRequest<any> {
+  protected requestInterceptor(req: HttpRequest<any>): Observable<HttpRequest<any>> {
     this.interceptorCallCount++;
     this.interceptorRequest = req;
-    return req;
+    return of(req);
   }
 
 }
@@ -68,8 +66,7 @@ class TestClient3 extends RestClient {
     super( httpHandler );
   }
 
-  @get( '/test' )
-  // @ts-ignore
+  @Get( '/test' )
   public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
@@ -89,22 +86,21 @@ class TestClient3 extends RestClient {
 class TestClient4 extends RestClient {
 
   public interceptorCallCount = 0;
-  public interceptorResponse: Observable<any>;
+  public interceptorResponse;
 
   constructor( httpHandler: HttpClient ) {
     super( httpHandler );
   }
 
-  @get( '/test' )
-  // @ts-ignore
+  @Get( '/test' )
   public getItems(): Observable<Response> {
     return null;
   }
 
-  protected responseInterceptor( res: Observable<HttpResponse<any>> ): Observable<any> {
+  protected responseInterceptor(res: HttpResponse<any>): Observable<HttpResponse<any>> {
     this.interceptorCallCount++;
     this.interceptorResponse = res;
-    return res;
+    return of(res);
   }
 
 }
@@ -171,7 +167,7 @@ describe( 'RestClient', () => {
     const testClient  = new TestClient4( requestMock );
 
     // Act
-    testClient.getItems();
+    testClient.getItems().subscribe();
 // Assert
     expect( testClient.interceptorCallCount).toBe( 1 );
 

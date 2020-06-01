@@ -2,9 +2,9 @@ import {tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {RestClient} from '../rest-client';
-import {get, post} from './request-methods';
+import {Get, Post} from './request-methods';
 
-import {body, FORMAT, header, pathParam, plainQuery, queryParam} from './parameters';
+import {Body, FORMAT, Header, pathParam, PlainQuery, QueryParam} from './parameters';
 
 describe('@pathParam', () => {
 
@@ -83,9 +83,9 @@ describe('@pathParam', () => {
   });
 });
 
-describe('@queryParam', () => {
+describe('@QueryParam', () => {
 
-  it('resolve queryParam variable', (done: (e?: any) => void) => {
+  it('resolve QueryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -103,7 +103,7 @@ describe('@queryParam', () => {
     testClient.getItems(5).subscribe();
   });
 
-  it('resolve missing queryParam variable', (done: (e?: any) => void) => {
+  it('resolve missing QueryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -122,7 +122,7 @@ describe('@queryParam', () => {
     testClient.getItems().subscribe();
   });
 
-  it('resolve default queryParam variable', (done: (e?: any) => void) => {
+  it('resolve default QueryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -140,7 +140,7 @@ describe('@queryParam', () => {
     testClient.getItems2().subscribe();
   });
 
-  it('resolve multiple queryParam variable', (done: (e?: any) => void) => {
+  it('resolve multiple QueryParam variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -253,9 +253,9 @@ describe('@queryParam', () => {
   });
 });
 
-describe('@plainQuery', () => {
+describe('@PlainQuery', () => {
 
-  it('resolve plainQuery as a string', (done: (e?: any) => void) => {
+  it('resolve PlainQuery as a string', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -274,7 +274,7 @@ describe('@plainQuery', () => {
 
   });
 
-  it('resolve plainQuery as a string', (done: (e?: any) => void) => {
+  it('resolve PlainQuery as a string', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -293,7 +293,7 @@ describe('@plainQuery', () => {
 
   });
 
-  it('resolve plainQuery as object', (done: (e?: any) => void) => {
+  it('resolve PlainQuery as object', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.urlWithParams}));
@@ -313,9 +313,9 @@ describe('@plainQuery', () => {
   });
 });
 
-describe('@header', () => {
+describe('@Header', () => {
 
-  it('resolve header variable', (done: (e?: any) => void) => {
+  it('resolve Header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
@@ -333,7 +333,7 @@ describe('@header', () => {
     testClient.getItems(5).subscribe();
   });
 
-  it('resolve missing header variable', (done: (e?: any) => void) => {
+  it('resolve missing Header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
@@ -351,7 +351,7 @@ describe('@header', () => {
     testClient.getItems().subscribe();
   });
 
-  it('resolve default header variable', (done: (e?: any) => void) => {
+  it('resolve default Header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
@@ -370,7 +370,7 @@ describe('@header', () => {
 
   });
 
-  it('resolve multiple header variable', (done: (e?: any) => void) => {
+  it('resolve multiple Header variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({headers: req.headers}));
@@ -503,9 +503,9 @@ describe('@header', () => {
   });
 });
 
-describe('@body', () => {
+describe('@Body', () => {
 
-  it('resolve body variable', (done: (e?: any) => void) => {
+  it('resolve Body variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({body: req.body}));
@@ -523,7 +523,7 @@ describe('@body', () => {
     testClient.createItem({name: 'Awesome Item'}).subscribe();
   });
 
-  it('resolve missing body variable', (done: (e?: any) => void) => {
+  it('resolve missing Body variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({body: req.body}));
@@ -541,7 +541,7 @@ describe('@body', () => {
     testClient.createItem().subscribe();
   });
 
-  it('resolve 2 body variable', () => {
+  it('resolve 2 Body variable', () => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({body: req.body}));
@@ -552,7 +552,7 @@ describe('@body', () => {
     try {
       expect( testClient.createItem2({name: 'first'}, {name: 'second'})).toThrow();
     } catch (e) {
-      expect(e.message).toBe( 'Only one @body is allowed');
+      expect(e.message).toBe( 'Only one @Body is allowed');
     }
   });
 });
@@ -580,24 +580,24 @@ class TestClientPath extends RestClient {
     super(httpHandler);
   }
 
-  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+  responseInterceptor(resp: HttpResponse<any>): Observable<HttpResponse<any>> {
     if (this.responseCallback) {
-      return resp.pipe(tap(this.responseCallback));
+      return of(resp).pipe(tap(this.responseCallback));
     }
-    return resp;
+    return of(resp);
   }
 
-  @get('/items/{id}')
+  @Get('/items/{id}')
   public getItem(@pathParam('id') id?: number): Observable<HttpResponse<any>> {
     return;
   }
 
-  @get('/items2/{id}')
+  @Get('/items2/{id}')
   public getItem2(@pathParam('id', {value: 7}) id?: number): Observable<HttpResponse<any>> {
     return;
   }
 
-  @get('/items3/{id}/status/status-{statusName}.{ext}')
+  @Get('/items3/{id}/status/status-{statusName}.{ext}')
   public getItem3(@pathParam('id') id: number,
                   @pathParam('statusName') statusName: string,
                   @pathParam('ext', {value: 'json'}) ext?: string): Observable<HttpResponse<any>> {
@@ -612,60 +612,52 @@ class TestClientQuery extends RestClient {
     super(httpHandler);
   }
 
-  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+  responseInterceptor(resp: HttpResponse<any>): Observable<HttpResponse<any>> {
     if (this.responseCallback) {
-      return resp.pipe(tap(this.responseCallback));
+      return of(resp).pipe(tap(this.responseCallback));
     }
-    return resp;
+    return of(resp);
   }
 
-  @get('/items')
-  // @ts-ignore
-  public getItems(@queryParam('page') page?: number): Observable<HttpResponse<any>> {
+  @Get('/items')
+  public getItems(@QueryParam('page') page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/items2')
-  // @ts-ignore
-  public getItems2(@queryParam('page', {value: 20}) page?: number): Observable<HttpResponse<any>> {
+  @Get('/items2')
+  public getItems2(@QueryParam('page', {value: 20}) page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/items3')
-  // @ts-ignore
-  public getItems3(@queryParam('page') page: number,
-                   @queryParam('size', {value: 20}) size?: string,
-                   @queryParam('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
+  @Get('/items3')
+  public getItems3(@QueryParam('page') page: number,
+                   @QueryParam('size', {value: 20}) size?: string,
+                   @QueryParam('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsCSV')
-  // @ts-ignore
-  public getItemsCSV(@queryParam('field', {format: FORMAT.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsCSV')
+  public getItemsCSV(@QueryParam('field', {format: FORMAT.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsSSV')
-  // @ts-ignore
-  public getItemsSSV(@queryParam('field', {format: FORMAT.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsSSV')
+  public getItemsSSV(@QueryParam('field', {format: FORMAT.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsTSV')
-  // @ts-ignore
-  public getItemsTSV(@queryParam('field', {format: FORMAT.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsTSV')
+  public getItemsTSV(@QueryParam('field', {format: FORMAT.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsPIPES')
-  // @ts-ignore
-  public getItemsPIPES(@queryParam('field', {format: FORMAT.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsPIPES')
+  public getItemsPIPES(@QueryParam('field', {format: FORMAT.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsMULTI')
-  // @ts-ignore
-  public getItemsMULTI(@queryParam('field', {format: FORMAT.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsMULTI')
+  public getItemsMULTI(@QueryParam('field', {format: FORMAT.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -681,22 +673,20 @@ class TestClientPlainQuery extends RestClient {
     super(httpHandler);
   }
 
-  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+  responseInterceptor(resp: HttpResponse<any>): Observable<HttpResponse<any>> {
     if (this.responseCallback) {
-      return resp.pipe(tap(this.responseCallback));
+      return of(resp).pipe(tap(this.responseCallback));
     }
-    return resp;
+    return of(resp);
   }
 
-  @get('/items')
-  // @ts-ignore
-  public getItems(@plainQuery query?: string): Observable<HttpResponse<any>> {
+  @Get('/items')
+  public getItems(@PlainQuery query?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/items2')
-  // @ts-ignore
-  public getItems2(@plainQuery query?: AnyQuery): Observable<HttpResponse<any>> {
+  @Get('/items2')
+  public getItems2(@PlainQuery query?: AnyQuery): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -708,66 +698,57 @@ class TestClientHeader extends RestClient {
     super(httpHandler);
   }
 
-  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+  responseInterceptor(resp: HttpResponse<any>): Observable<HttpResponse<any>> {
     if (this.responseCallback) {
-      return resp.pipe(tap(this.responseCallback));
+      return of(resp).pipe(tap(this.responseCallback));
     }
-    return resp;
+    return of(resp);
   }
 
-  @get('/items')
-  // @ts-ignore
-  public getItems(@header('page') page?: number): Observable<HttpResponse<any>> {
+  @Get('/items')
+  public getItems(@Header('page') page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/items2')
-  // @ts-ignore
-  public getItems2(@header('page', {value: '20'}) page?: number): Observable<HttpResponse<any>> {
+  @Get('/items2')
+  public getItems2(@Header('page', {value: '20'}) page?: number): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/items3')
-  // @ts-ignore
-  public getItems3(@header('page') page: number,
-                   @header('size', {value: 20}) size?: string,
-                   @header('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
+  @Get('/items3')
+  public getItems3(@Header('page') page: number,
+                   @Header('size', {value: 20}) size?: string,
+                   @Header('sort', {value: 'asc'}) sort?: string): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsDefault')
-  // @ts-ignore
-  public getItemsDefault(@header('field') fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsDefault')
+  public getItemsDefault(@Header('field') fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsCSV')
-  // @ts-ignore
-  public getItemsCSV(@header('field', {format: FORMAT.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsCSV')
+  public getItemsCSV(@Header('field', {format: FORMAT.CSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsSSV')
-  // @ts-ignore
-  public getItemsSSV(@header('field', {format: FORMAT.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsSSV')
+  public getItemsSSV(@Header('field', {format: FORMAT.SSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsTSV')
-  // @ts-ignore
-  public getItemsTSV(@header('field', {format: FORMAT.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsTSV')
+  public getItemsTSV(@Header('field', {format: FORMAT.TSV}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsPIPES')
-  // @ts-ignore
-  public getItemsPIPES(@header('field', {format: FORMAT.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsPIPES')
+  public getItemsPIPES(@Header('field', {format: FORMAT.PIPES}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
-  @get('/itemsMULTI')
-  // @ts-ignore
-  public getItemsMULTI(@header('field', {format: FORMAT.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
+  @Get('/itemsMULTI')
+  public getItemsMULTI(@Header('field', {format: FORMAT.MULTI}) fields: string | string[]): Observable<HttpResponse<any>> {
     return null;
   }
 
@@ -779,22 +760,20 @@ class TestClientBody extends RestClient {
     super(httpHandler);
   }
 
-  responseInterceptor(resp: Observable<HttpResponse<any>>) {
+  responseInterceptor(resp: HttpResponse<any>): Observable<HttpResponse<any>> {
     if (this.responseCallback) {
-      return resp.pipe(tap(this.responseCallback));
+      return of(resp).pipe(tap(this.responseCallback));
     }
-    return resp;
+    return of(resp);
   }
 
-  @post('/items')
-  // @ts-ignore
-  public createItem(@body bdy?: any): Observable<HttpResponse<any>> {
+  @Post('/items')
+  public createItem(@Body bdy?: any): Observable<HttpResponse<any>> {
     return;
   }
 
-  @get('/items2')
-  // @ts-ignore
-  public createItem2(@body body1?: any, @body body2?: any): Observable<HttpResponse<any>> {
+  @Get('/items2')
+  public createItem2(@Body body1?: any, @Body body2?: any): Observable<HttpResponse<any>> {
     return;
   }
 
