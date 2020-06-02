@@ -95,7 +95,7 @@ class TestClient extends RestClient {
 
   @Post( {
     path: '/test',
-    httpResponse: true
+    fullResponse: true
   } )
   @Map(resp => new Item(JSON.parse(resp)))
   public postItemsHttpResponse(): Observable<any> {

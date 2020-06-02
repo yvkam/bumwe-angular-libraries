@@ -9,20 +9,6 @@ import {buildHeaders} from './headers-builder';
 import {buildQueryParams} from './query-params-builder';
 import {buildBody} from './body-builder';
 
-function applyMapDecorator(mapper: (resp: any) => any,
-                           annotationArgs,
-                           response: Observable<HttpResponse<any>>): Observable<any> {
-  const httpResponse = annotationArgs ? annotationArgs.httpResponse : false;
-  return response.pipe(
-    map((r: HttpResponse<any>) => r.clone({body: mapper(r.body)})),
-    map((r: HttpResponse<any>) => httpResponse ? r : r.body)
-  );
-}
-
-function applyOnEmitDecorator(emitters, response: Observable<HttpResponse<any>>) {
-  return emitters.reduce((resp, handler) => handler(resp), response);
-}
-
 export function requestMethodProcessor(method?: RequestMethod) {
   return (annotationArgs: string | RequestMethodArgs) => {
     return (target: RestClient, propertyKey: string, descriptor: any) => {
@@ -55,9 +41,23 @@ export function requestMethodProcessor(method?: RequestMethod) {
   };
 }
 
+function applyMapDecorator(mapper: (resp: any) => any,
+                           annotationArgs,
+                           response: Observable<HttpResponse<any>>): Observable<any> {
+  const fullResponse = annotationArgs ? annotationArgs.fullResponse : false;
+  return response.pipe(
+    map((r: HttpResponse<any>) => r.clone({body: mapper(r.body)})),
+    map((r: HttpResponse<any>) => fullResponse ? r : r.body)
+  );
+}
+
+function applyOnEmitDecorator(emitters, response: Observable<HttpResponse<any>>) {
+  return emitters.reduce((resp, handler) => handler(resp), response);
+}
+
 function addRequestInterceptor(request: HttpRequest<unknown>): Observable<HttpRequest<any>> {
-  const interceptedRequest = this.requestInterceptor(request);
-  return interceptedRequest ? interceptedRequest : of(request);
+  const interceptedRequest$ = this.requestInterceptor(request);
+  return interceptedRequest$ ? interceptedRequest$ : of(request);
 }
 
 function addResponseInterceptor(httpResponse: HttpResponse<any>): Observable<HttpResponse<any>> {
@@ -107,6 +107,7 @@ function getTimeout(descriptor: any, options: any): number {
   if (options && options.timeout) {
     return options.timeout;
   }
+
   return 30000;
 }
 

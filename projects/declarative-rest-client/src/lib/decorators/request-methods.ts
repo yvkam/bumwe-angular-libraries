@@ -72,7 +72,7 @@ export interface RequestMethodArgs {
   produces?: string[];
   consumes?: string[];
   timeout?: number;
-  httpResponse?: boolean;
+  fullResponse?: boolean;
   requestAuthHeaders?: string[];
   responseAuthHeaders?: string[];
 }
