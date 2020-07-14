@@ -8,6 +8,7 @@ import {buildUrl} from './url-builder';
 import {buildHeaders} from './headers-builder';
 import {buildQueryParams} from './query-params-builder';
 import {buildBody} from './body-builder';
+import 'reflect-metadata';
 
 export function requestMethodProcessor(method?: RequestMethod) {
   return (annotationArgs: string | RequestMethodArgs) => {

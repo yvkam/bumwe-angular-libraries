@@ -6,9 +6,9 @@ import {Get, Post} from './request-methods';
 
 import {Body, FORMAT, Header, pathParam, PlainQuery, QueryParam} from './parameters';
 
-describe('@pathParam', () => {
+describe('@variable', () => {
 
-  it('resolve pathParam variable', (done: (e?: any) => void) => {
+  it('resolve variable variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
@@ -28,7 +28,7 @@ describe('@pathParam', () => {
     testClient.getItem(5).subscribe();
   });
 
-  it('resolve missing pathParam variable', () => {
+  it('resolve missing variable variable', () => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
@@ -45,7 +45,7 @@ describe('@pathParam', () => {
 
   });
 
-  it('resolve default pathParam variable', (done: (e?: any) => void) => {
+  it('resolve default variable variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));
@@ -64,7 +64,7 @@ describe('@pathParam', () => {
     testClient.getItem2().subscribe();
   });
 
-  it('resolve multiple pathParam variable', (done: (e?: any) => void) => {
+  it('resolve multiple variable variable', (done: (e?: any) => void) => {
     // Arrange
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       return of(new HttpResponse<any>({url: req.url}));

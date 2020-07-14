@@ -1,7 +1,7 @@
 import {RestClient} from '../rest-client';
 
 export const metadataKeySuffix = {
-  pathParam: `_PathParam_parameters`,
+  variable: `_PathParam_parameters`,
   queryParam: `_QueryParam_parameters`,
   plainQuery: `_PlainQuery_parameters`,
   body: `_Body_parameters`,
@@ -10,7 +10,7 @@ export const metadataKeySuffix = {
 };
 
 /**
- * pathParam variable of a method's url, type: string
+ * variable variable of a method's url, type: string
  * @param key - path key to bind value
  */
 export const pathParam = paramBuilder(metadataKeySuffix.pathParam);
