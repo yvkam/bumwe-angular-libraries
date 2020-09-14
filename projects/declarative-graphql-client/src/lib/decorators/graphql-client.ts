@@ -4,11 +4,6 @@
  */
 export function graphqlClient(options: GraphqlClientArgs) {
   return (Target) => {
-    if (options.baseUrl) {
-      Target.prototype.getBaseUrl = () => {
-        return options.baseUrl;
-      };
-    }
     if (options.headers) {
       Target.prototype.getDefaultHeaders = () => options.headers;
     }
@@ -17,6 +12,5 @@ export function graphqlClient(options: GraphqlClientArgs) {
 }
 
 interface GraphqlClientArgs {
-  baseUrl?: string;
   headers?: { [header: string]: string | string[] };
 }

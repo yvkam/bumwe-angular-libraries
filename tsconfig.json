@@ -20,10 +20,10 @@
       "path": "./projects/showcase/tsconfig.spec.json"
     },
     {
-      "path": "./projects/graphql-client/tsconfig.lib.json"
+      "path": "./projects/declarative-graphql-client/tsconfig.lib.json"
     },
     {
-      "path": "./projects/graphql-client/tsconfig.spec.json"
+      "path": "./projects/declarative-graphql-client/tsconfig.spec.json"
     }
   ]
 }

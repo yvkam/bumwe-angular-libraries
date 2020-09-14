@@ -160,38 +160,38 @@
         }
       }
     },
-    "graphql-client": {
+    "declarative-graphql-client": {
       "projectType": "library",
-      "root": "projects/graphql-client",
-      "sourceRoot": "projects/graphql-client/src",
+      "root": "projects/declarative-graphql-client",
+      "sourceRoot": "projects/declarative-graphql-client/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/graphql-client/tsconfig.lib.json",
-            "project": "projects/graphql-client/ng-package.json"
+            "tsConfig": "projects/declarative-graphql-client/tsconfig.lib.json",
+            "project": "projects/declarative-graphql-client/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/graphql-client/tsconfig.lib.prod.json"
+              "tsConfig": "projects/declarative-graphql-client/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/graphql-client/src/test.ts",
-            "tsConfig": "projects/graphql-client/tsconfig.spec.json",
-            "karmaConfig": "projects/graphql-client/karma.conf.js"
+            "main": "projects/declarative-graphql-client/src/test.ts",
+            "tsConfig": "projects/declarative-graphql-client/tsconfig.spec.json",
+            "karmaConfig": "projects/declarative-graphql-client/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/graphql-client/tsconfig.lib.json",
-              "projects/graphql-client/tsconfig.spec.json"
+              "projects/declarative-graphql-client/tsconfig.lib.json",
+              "projects/declarative-graphql-client/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

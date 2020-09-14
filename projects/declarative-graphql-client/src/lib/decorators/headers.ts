@@ -1,5 +1,5 @@
 /**
- * Set custom Headers for a Graphql method
+ * Set custom Headers for a Graphql call
  * @param httpHeaders - custom Headers in a key-value pair
  */
 import {GraphqlClient} from '../graphql-client';

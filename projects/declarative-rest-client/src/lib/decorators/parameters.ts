@@ -1,7 +1,7 @@
 import {RestClient} from '../rest-client';
 
 export const metadataKeySuffix = {
-  variable: `_PathParam_parameters`,
+  pathParam: `_PathParam_parameters`,
   queryParam: `_QueryParam_parameters`,
   plainQuery: `_PlainQuery_parameters`,
   body: `_Body_parameters`,

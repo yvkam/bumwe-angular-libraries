@@ -1,9 +1,7 @@
-import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Apollo} from 'apollo-angular';
 
 /**
- * RestClient class.
+ * Graphql class.
  *
  */
 export abstract class GraphqlClient {

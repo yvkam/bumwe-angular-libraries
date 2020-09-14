@@ -37,6 +37,7 @@ export const Subscription: (args: GraphqlOperationArgs) => (target: GraphqlClien
 
 
 export interface GraphqlOperationArgs {
+  query?: string;
   timeout?: number;
   requestAuthHeaders?: string[];
   responseAuthHeaders?: string[];
