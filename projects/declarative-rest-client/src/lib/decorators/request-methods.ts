@@ -1,5 +1,5 @@
 import {requestMethodProcessor} from '../processors/request-method-processor';
-import {RestClient} from '../rest-client';
+import {AbstractRestClient} from '../abstract-rest-client';
 
 export enum RequestMethod {
   GET = 'GET',
@@ -7,6 +7,7 @@ export enum RequestMethod {
   PUT = 'PUT',
   TRACE = 'TRACE',
   PATCH = 'PATCH',
+  DELETE = 'DELETE',
   HEAD = 'HEAD',
   OPTIONS = 'OPTIONS'
 }
@@ -16,55 +17,62 @@ export enum RequestMethod {
  * @param () => url - resource url of the method
  */
 export const Request: (args: GenericRequestMethodArgs) =>
-  (target: RestClient, propertyKey: string, descriptor: any) => any = requestMethodProcessor();
+  (target: AbstractRestClient, propertyKey: string, descriptor: any) => any = requestMethodProcessor();
 
 /**
  * Get method
  * @param () => url - resource url of the method
  */
-export const Get: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Get: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.GET);
 
 /**
  * Post method
  * @param () => url - resource url of the method
  */
-export const Post: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Post: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.POST);
 
 /**
  * Put method
  * @param () => url - resource url of the method
  */
-export const Put: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Put: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.PUT);
 
 /**
  * Patch method
  * @param () => url - resource url of the method
  */
-export const Patch: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Patch: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.PATCH);
+
+/**
+ * Delete method
+ * @param () => url - resource url of the method
+ */
+export const Delete: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
+  requestMethodProcessor(RequestMethod.DELETE);
 
 /**
  * Trace method
  * @param () => url - resource url of the method
  */
-export const Trace: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Trace: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.TRACE);
 
 /**
  * Head method
  * @param () => url - resource url of the method
  */
-export const Head: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Head: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.HEAD);
 
 /**
  * Options method
  * @param () => url - resource url of the method
  */
-export const Options: (args: RequestMethodArgs | string) => (target: RestClient, propertyKey: string, descriptor: any) => any =
+export const Options: (args: RequestMethodArgs | string) => (target: AbstractRestClient, propertyKey: string, descriptor: any) => any =
   requestMethodProcessor(RequestMethod.OPTIONS);
 
 export interface RequestMethodArgs {

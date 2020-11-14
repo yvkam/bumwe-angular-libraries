@@ -1,7 +1,7 @@
 import { map} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { RestClient } from '../rest-client';
+import { AbstractRestClient } from '../abstract-rest-client';
 import { OnEmit } from './on-emit';
 import { Get } from './request-methods';
 
@@ -59,7 +59,7 @@ class Item {
   }
 }
 
-class TestClient extends RestClient {
+class TestClient extends AbstractRestClient {
 
   constructor( httpHandler: HttpClient ) {
     super( httpHandler );

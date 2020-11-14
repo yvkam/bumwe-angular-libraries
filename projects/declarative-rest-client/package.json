@@ -1,9 +1,9 @@
 {
-  "name": "declarative-rest-client",
+  "name": "@kanelu/declarative-rest-client",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^9.1.9",
-    "@angular/core": "^9.1.9",
+    "@angular/common": "^10.0.3",
+    "@angular/core": "^10.0.3",
     "rxjs": "~6.5.4"
   },
   "dependencies": {

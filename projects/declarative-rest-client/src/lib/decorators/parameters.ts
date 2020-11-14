@@ -1,4 +1,4 @@
-import {RestClient} from '../rest-client';
+import {AbstractRestClient} from '../abstract-rest-client';
 
 export const metadataKeySuffix = {
   pathParam: `_PathParam_parameters`,
@@ -13,7 +13,7 @@ export const metadataKeySuffix = {
  * variable variable of a method's url, type: string
  * @param key - path key to bind value
  */
-export const pathParam = paramBuilder(metadataKeySuffix.pathParam);
+export const PathParam = paramBuilder(metadataKeySuffix.pathParam);
 
 /**
  * QueryParam value of a method's url, type: string
@@ -91,7 +91,7 @@ function validateFormat(format: string): string {
 
 export function paramBuilder(paramName: string) {
   return (name?: string, args?: { value?: any, format?: string }) => {
-    return (target: RestClient, propertyKey: string | symbol, index: number) => {
+    return (target: AbstractRestClient, propertyKey: string | symbol, index: number) => {
       const value = args ? args.value : undefined;
       const format = args ? validateFormat(args.format) : undefined;
       const metadataKey = `${propertyKey as string}${paramName}`;

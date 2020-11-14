@@ -2,10 +2,10 @@ import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 /**
- * RestClient class.
+ * AbstractRestClient class.
  *
  */
-export abstract class RestClient {
+export abstract class AbstractRestClient {
   protected constructor(
     protected httpClient: HttpClient
   ) {}

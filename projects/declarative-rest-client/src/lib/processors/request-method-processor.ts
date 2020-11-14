@@ -1,7 +1,7 @@
 import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
-import {flatMap, map, mergeMap, tap, timeout} from 'rxjs/operators';
+import {filter, flatMap, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {RestClient} from '../rest-client';
+import {AbstractRestClient} from '../abstract-rest-client';
 import {metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
 import {GenericRequestMethodArgs, RequestMethod, RequestMethodArgs} from '../decorators/request-methods';
 import {buildUrl} from './url-builder';
@@ -12,7 +12,7 @@ import 'reflect-metadata';
 
 export function requestMethodProcessor(method?: RequestMethod) {
   return (annotationArgs: string | RequestMethodArgs) => {
-    return (target: RestClient, propertyKey: string, descriptor: any) => {
+    return (target: AbstractRestClient, propertyKey: string, descriptor: any) => {
 
       descriptor.value = function(...targetMethodArgs: any[]) {
 
@@ -47,6 +47,7 @@ function applyMapDecorator(mapper: (resp: any) => any,
                            response: Observable<HttpResponse<any>>): Observable<any> {
   const fullResponse = annotationArgs ? annotationArgs.fullResponse : false;
   return response.pipe(
+    filter(r => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => r.clone({body: mapper(r.body)})),
     map((r: HttpResponse<any>) => fullResponse ? r : r.body)
   );
@@ -120,7 +121,7 @@ function getPath(request: string | RequestMethodArgs) {
   return typeof request === 'string' ? request : request.path;
 }
 
-function getMetadata(target: RestClient, propertyKey: string, methodArgs: any[]) {
+function getMetadata(target: AbstractRestClient, propertyKey: string, methodArgs: any[]) {
   return {
     pathParams: enrichMetadata(target[propertyKey + metadataKeySuffix.pathParam], methodArgs),
     queryParams: enrichMetadata(target[propertyKey + metadataKeySuffix.queryParam], methodArgs),

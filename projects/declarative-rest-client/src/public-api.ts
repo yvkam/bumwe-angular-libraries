@@ -4,7 +4,7 @@
 
 export * from './lib/declarative-rest-client.module';
 
-export * from './lib/rest-client';
+export * from './lib/abstract-rest-client';
 
 export * from './lib/decorators/map';
 export * from './lib/decorators/rest-client';

@@ -1,7 +1,7 @@
 import {Observable, of} from 'rxjs';
-import {RestClient} from '../rest-client';
+import {AbstractRestClient} from '../abstract-rest-client';
 import {HttpClient, HttpHeaders, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Get, Head, Options, Patch, Post, Put, Request, RequestMethod, Trace} from './request-methods';
+import {Delete, Get, Head, Options, Patch, Post, Put, Request, RequestMethod, Trace} from './request-methods';
 
 describe('@Get', () => {
 
@@ -79,6 +79,26 @@ describe('@Patch', () => {
     // Act
     testClient.patchItems().subscribe();
     expect(method).toBe(RequestMethod.PATCH);
+    expect(url).toBe('/test');
+  });
+});
+
+describe('@Delete', () => {
+
+  it('verify Request method is set', () => {
+    // Arrange
+    let method;
+    let url;
+    const requestMock = new HttpMock((req: HttpRequest<any>) => {
+      method = req.method;
+      url = req.url;
+      return of(new HttpResponse<any>());
+    });
+    const testClient = new TestClient(requestMock);
+
+    // Act
+    testClient.deleteItem().subscribe();
+    expect(method).toBe(RequestMethod.DELETE);
     expect(url).toBe('/test');
   });
 });
@@ -228,7 +248,7 @@ class HttpMock extends HttpClient {
 
 }
 
-class TestClient extends RestClient {
+class TestClient extends AbstractRestClient {
 
   constructor(httpHandler: HttpClient) {
     super(httpHandler);
@@ -263,6 +283,11 @@ class TestClient extends RestClient {
 
   @Patch('/test')
   public patchItems(): Observable<HttpResponse<any>> {
+    return;
+  }
+
+  @Delete('/test')
+  public deleteItem(): Observable<HttpResponse<any>> {
     return;
   }
 

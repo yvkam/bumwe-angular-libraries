@@ -1,8 +1,8 @@
 /**
- * Configure the REST restClient
- * @param options restClient option
+ * Configure the REST RestClient
+ * @param options RestClient option
  */
-export function restClient(options: RestClientArgs) {
+export function RestClient(options: RestClientArgs) {
   return (Target) => {
     if (options.serviceId) {
       Target.prototype.getServiceId = () => {

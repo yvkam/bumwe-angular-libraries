@@ -1,10 +1,10 @@
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { RestClient } from '../rest-client';
+import { AbstractRestClient } from '../abstract-rest-client';
 import { Get } from './request-methods';
-import { restClient } from './rest-client';
+import { RestClient } from './rest-client';
 
-describe('@restClient', () => {
+describe('@RestClient', () => {
 
   it('verify decorator attributes are added to the Request', () => {
     // Arrange
@@ -41,14 +41,14 @@ class HttpMock extends HttpClient {
 
 }
 
-@restClient({
+@RestClient({
   serviceId: 'customer-service',
   baseUrl: '/api/v1/customers',
   headers: {
     'content-type': 'application/json'
   }
 })
-class TestClient extends RestClient {
+class TestClient extends AbstractRestClient {
 
   constructor( httpHandler: HttpClient ) {
     super( httpHandler );

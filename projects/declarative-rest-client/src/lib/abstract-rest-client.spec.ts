@@ -1,10 +1,10 @@
 import { Observable, of } from 'rxjs';
 import { timeout, tap } from 'rxjs/operators';
-import { RestClient } from './rest-client';
+import { AbstractRestClient } from './abstract-rest-client';
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Get, RequestMethod } from './decorators/request-methods';
 
-describe( 'RestClient', () => {
+describe( 'AbstractRestClient', () => {
   beforeEach( () => {
     // Nothing here yet.
   } );
@@ -90,7 +90,7 @@ class HttpMock extends HttpClient {
 
 }
 
-class TestClient1 extends RestClient {
+class TestClient1 extends AbstractRestClient {
 
   constructor( httpHandler: HttpClient ) {
     super( httpHandler );
@@ -103,7 +103,7 @@ class TestClient1 extends RestClient {
 
 }
 
-class TestClient2 extends RestClient {
+class TestClient2 extends AbstractRestClient {
 
   public interceptorCallCount = 0;
   public interceptorRequest: HttpRequest<any>;
@@ -125,7 +125,7 @@ class TestClient2 extends RestClient {
 
 }
 
-class TestClient3 extends RestClient {
+class TestClient3 extends AbstractRestClient {
 
   public interceptorCallCount = 0;
   public interceptorRequest: HttpRequest<any>;
@@ -152,7 +152,7 @@ class TestClient3 extends RestClient {
 
 }
 
-class TestClient4 extends RestClient {
+class TestClient4 extends AbstractRestClient {
 
   public interceptorCallCount = 0;
   public interceptorResponse;

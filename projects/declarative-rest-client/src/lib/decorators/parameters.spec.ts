@@ -1,10 +1,10 @@
 import {tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
-import {RestClient} from '../rest-client';
+import {AbstractRestClient} from '../abstract-rest-client';
 import {Get, Post} from './request-methods';
 
-import {Body, FORMAT, Header, pathParam, PlainQuery, QueryParam} from './parameters';
+import {Body, FORMAT, Header, PathParam, PlainQuery, QueryParam} from './parameters';
 
 describe('@variable', () => {
 
@@ -574,7 +574,7 @@ class HttpMock extends HttpClient {
 
 }
 
-class TestClientPath extends RestClient {
+class TestClientPath extends AbstractRestClient {
 
   constructor(httpHandler: HttpClient, private responseCallback?: (resp: any) => void) {
     super(httpHandler);
@@ -588,25 +588,25 @@ class TestClientPath extends RestClient {
   }
 
   @Get('/items/{id}')
-  public getItem(@pathParam('id') id?: number): Observable<HttpResponse<any>> {
+  public getItem(@PathParam('id') id?: number): Observable<HttpResponse<any>> {
     return;
   }
 
   @Get('/items2/{id}')
-  public getItem2(@pathParam('id', {value: 7}) id?: number): Observable<HttpResponse<any>> {
+  public getItem2(@PathParam('id', {value: 7}) id?: number): Observable<HttpResponse<any>> {
     return;
   }
 
   @Get('/items3/{id}/status/status-{statusName}.{ext}')
-  public getItem3(@pathParam('id') id: number,
-                  @pathParam('statusName') statusName: string,
-                  @pathParam('ext', {value: 'json'}) ext?: string): Observable<HttpResponse<any>> {
+  public getItem3(@PathParam('id') id: number,
+                  @PathParam('statusName') statusName: string,
+                  @PathParam('ext', {value: 'json'}) ext?: string): Observable<HttpResponse<any>> {
     return;
   }
 
 }
 
-class TestClientQuery extends RestClient {
+class TestClientQuery extends AbstractRestClient {
 
   constructor(httpHandler: HttpClient, private responseCallback?: (resp: any) => void) {
     super(httpHandler);
@@ -667,7 +667,7 @@ interface AnyQuery {
   [k: string]: any;
 }
 
-class TestClientPlainQuery extends RestClient {
+class TestClientPlainQuery extends AbstractRestClient {
 
   constructor(httpHandler: HttpClient, private responseCallback?: (resp: any) => void) {
     super(httpHandler);
@@ -692,7 +692,7 @@ class TestClientPlainQuery extends RestClient {
 
 }
 
-class TestClientHeader extends RestClient {
+class TestClientHeader extends AbstractRestClient {
 
   constructor(httpHandler: HttpClient, private responseCallback?: (resp: any) => void) {
     super(httpHandler);
@@ -754,7 +754,7 @@ class TestClientHeader extends RestClient {
 
 }
 
-class TestClientBody extends RestClient {
+class TestClientBody extends AbstractRestClient {
 
   constructor(httpHandler: HttpClient, private responseCallback?: (resp: any) => void) {
     super(httpHandler);

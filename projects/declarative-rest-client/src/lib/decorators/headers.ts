@@ -1,11 +1,11 @@
-import { RestClient } from '../rest-client';
+import { AbstractRestClient } from '../abstract-rest-client';
 
 /**
  * Set custom Headers for a REST method
  * @param httpHeaders - custom Headers in a key-value pair
  */
 export function Headers(httpHeaders: { [header: string]: string | string[]; }) {
-  return (target: RestClient, propertyKey: string, descriptor: any) => {
+  return (target: AbstractRestClient, propertyKey: string, descriptor: any) => {
     descriptor.headers = httpHeaders;
     return descriptor;
   };

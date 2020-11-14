@@ -1,4 +1,4 @@
-import { RestClient } from '../rest-client';
+import { AbstractRestClient } from '../abstract-rest-client';
 import { Observable } from 'rxjs';
 
 /**
@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
  * @param emitter function to add functions to the observable
  */
 export function OnEmit<T>(emitter: (resp: Observable<any>) => Observable<T>) {
-  return ( target: RestClient, propertyKey: string, descriptor: any) => {
+  return (target: AbstractRestClient, propertyKey: string, descriptor: any) => {
     if ( !descriptor.emitters ) {
       descriptor.emitters = [];
     }
