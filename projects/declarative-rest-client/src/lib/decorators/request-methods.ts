@@ -76,7 +76,7 @@ export const Options: (args: RequestMethodArgs | string) => (target: AbstractRes
   requestMethodProcessor(RequestMethod.OPTIONS);
 
 export interface RequestMethodArgs {
-  path: string;
+  path?: string;
   produces?: string[];
   consumes?: string[];
   timeout?: number;
