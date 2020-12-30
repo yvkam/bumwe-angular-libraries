@@ -25,7 +25,7 @@ export function requestMethodProcessor(method?: RequestMethod) {
         const headers = buildHeaders(this.getDefaultHeaders(), descriptor.headers, metadata.header, annotationArgs);
         const timeoutValue = getTimeout(descriptor, annotationArgs);
         const responseAuthHeaders = getResponseAuthHeaders(annotationArgs);
-        const mapper = getMapper(descriptor);
+        const mapper = getMapper(annotationArgs, descriptor);
         const emitters = descriptor.emitters || [];
 
         // Make the HTTP request
@@ -89,7 +89,10 @@ function sendRequest(method: RequestMethod,
 
 }
 
-function getMapper(descriptor: any): (resp) => any {
+function getMapper(options: any, descriptor: any): (resp) => any {
+  if (options.deserializer) {
+    return options.deserializer;
+  }
   if (descriptor.mapper) {
     return descriptor.mapper;
   }

@@ -81,6 +81,7 @@ export interface RequestMethodArgs {
   consumes?: string[];
   timeout?: number;
   fullResponse?: boolean;
+  deserializer?: (responseBody: any) => any;
   requestAuthHeaders?: string[];
   responseAuthHeaders?: string[];
 }
