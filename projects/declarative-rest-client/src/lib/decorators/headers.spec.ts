@@ -54,7 +54,6 @@ class TestClient extends AbstractRestClient {
     accept: 'application/json',
     lang: [ 'en', 'nl' ]
   } )
-
   public getItems(): Observable<HttpResponse<any>> {
     return;
   }

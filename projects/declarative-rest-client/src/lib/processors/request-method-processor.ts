@@ -1,5 +1,5 @@
 import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
-import {filter, flatMap, map, mergeMap, tap, timeout} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, tap, timeout} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {AbstractRestClient} from '../abstract-rest-client';
 import {metadataKeySuffix, ParameterMetadata} from '../decorators/parameters';
@@ -84,7 +84,7 @@ function sendRequest(method: RequestMethod,
     mergeMap((req: HttpRequest<any>) => (this.httpClient as HttpClient).request(req)),
     timeout(options.timeoutValue),
     tap((r: HttpResponse<any>) => options.responseAuthHeaders.forEach(token => sessionStorage.setItem(token, r.headers.get(token)))),
-    flatMap(e => addResponseInterceptor.call(this, e) as Observable<HttpResponse<any>>),
+    switchMap(e => addResponseInterceptor.call(this, e) as Observable<HttpResponse<any>>),
   );
 
 }

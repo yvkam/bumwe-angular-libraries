@@ -5,7 +5,7 @@ import { AbstractRestClient } from '../abstract-rest-client';
  * @param httpHeaders - custom Headers in a key-value pair
  */
 export function Headers(httpHeaders: { [header: string]: string | string[]; }) {
-  return (target: AbstractRestClient, propertyKey: string, descriptor: any) => {
+  return (target: AbstractRestClient, propertyKey: string, descriptor) => {
     descriptor.headers = httpHeaders;
     return descriptor;
   };

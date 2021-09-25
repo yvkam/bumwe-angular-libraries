@@ -92,11 +92,11 @@ function validateFormat(format: string): string {
 export function paramBuilder(paramName: string) {
   return (name?: string, args?: { value?: any, format?: string }) => {
     return (target: AbstractRestClient, propertyKey: string | symbol, index: number) => {
-      const value = args ? args.value : undefined;
-      const format = args ? validateFormat(args.format) : undefined;
+      const value = args?.value;
+      const format = validateFormat(args?.format);
       const metadataKey = `${propertyKey as string}${paramName}`;
       const metadata = { key: name, value, index, format};
-      target[metadataKey] = (target[metadataKey] || []) as Array<any>;
+      target[metadataKey] = target[metadataKey] || [];
       target[metadataKey].push(metadata);
     };
   };
