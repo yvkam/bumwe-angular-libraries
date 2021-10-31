@@ -93,6 +93,7 @@ function getMapper(options: any, descriptor: any): (resp) => any {
   if (options.deserializer) {
     return options.deserializer;
   }
+
   if (descriptor.mapper) {
     return descriptor.mapper;
   }
@@ -104,6 +105,8 @@ function getResponseAuthHeaders(options: any): string[] {
   return options ? options.responseAuthHeaders || [] : [];
 }
 
+const DEFAULT_TIMEOUT = 30000;
+
 function getTimeout(descriptor: any, options: any): number {
   if (descriptor.timeout) {
     return descriptor.timeout;
@@ -113,7 +116,7 @@ function getTimeout(descriptor: any, options: any): number {
     return options.timeout;
   }
 
-  return 30000;
+  return DEFAULT_TIMEOUT;
 }
 
 function getRequestMethod(method: RequestMethod, request: string | RequestMethodArgs) {

@@ -1,5 +1,5 @@
 {
-  "name": "kanelu-angular-libraries",
+  "name": "luneka-angular-libraries",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -20,8 +20,6 @@
     "@angular/core": "^12.2.7",
     "@angular/platform-browser": "^12.2.7",
     "@angular/platform-browser-dynamic": "^12.2.7",
-    "apollo-angular": "^2.6.0",
-    "apollo-client": "^2.6.10",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.4",
     "tslib": "^2.0.0",
