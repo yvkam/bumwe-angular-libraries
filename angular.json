@@ -30,14 +30,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/declarative-rest-client/tsconfig.lib.json",
-              "projects/declarative-rest-client/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/declarative-rest-client/**/*.ts",
+              "projects/declarative-rest-client/**/*.html"
             ]
           }
         }
@@ -133,15 +130,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/showcase/tsconfig.app.json",
-              "projects/showcase/tsconfig.spec.json",
-              "projects/showcase/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/showcase/**/*.ts",
+              "projects/showcase/**/*.html"
             ]
           }
         },
@@ -158,46 +151,7 @@
           }
         }
       }
-    },
-    "declarative-graphql-client": {
-      "projectType": "library",
-      "root": "projects/declarative-graphql-client",
-      "sourceRoot": "projects/declarative-graphql-client/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/declarative-graphql-client/tsconfig.lib.json",
-            "project": "projects/declarative-graphql-client/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/declarative-graphql-client/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/declarative-graphql-client/src/test.ts",
-            "tsConfig": "projects/declarative-graphql-client/tsconfig.spec.json",
-            "karmaConfig": "projects/declarative-graphql-client/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/declarative-graphql-client/tsconfig.lib.json",
-              "projects/declarative-graphql-client/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    }},
+    }
+  },
   "defaultProject": "declarative-rest-client"
 }

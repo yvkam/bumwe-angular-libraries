@@ -14,7 +14,6 @@ describe('@RestClient', () => {
     const testClient = new TestClient(requestMock);
 
     // Assert
-    expect(testClient.getServiceIdWrapper()).toBe( 'customer-service');
     expect(testClient.getBaseUrlWrapper()).toBe( '/api/v1/customers');
     expect(testClient.isWithCredentialsWrapper()).toBeFalsy();
     expect(testClient.getDefaultHeadersWrapper() as any).toStrictEqual ({
@@ -57,10 +56,6 @@ class TestClient extends AbstractRestClient {
   @Get('/test')
   public getItems(): Observable<HttpResponse<any>> {
     return null;
-  }
-
-  public getServiceIdWrapper(): string {
-    return this.getServiceId();
   }
 
   public getBaseUrlWrapper(): string {

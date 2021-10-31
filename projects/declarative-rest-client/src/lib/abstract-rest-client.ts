@@ -10,10 +10,6 @@ export abstract class AbstractRestClient {
     protected httpClient: HttpClient
   ) {}
 
-  protected getServiceId(): string {
-    return;
-  }
-
   protected getBaseUrl(): string {
     return;
   }

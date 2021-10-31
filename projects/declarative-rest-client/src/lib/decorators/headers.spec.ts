@@ -10,7 +10,7 @@ describe( '@Headers', () => {
 
   it( 'verify decorator attributes are set', () => {
     // Arrange
-    let testHeaders: any ;
+    let testHeaders;
     const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       testHeaders = req.headers;
       return of( new HttpResponse<any>( { status: 200 } ) );
