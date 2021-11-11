@@ -1,5 +1,5 @@
 {
-  "name": "@luneka/declarative-rest-client",
+  "name": "@bumwe/declarative-rest-client",
   "version": "0.0.2",
   "peerDependencies": {
     "@angular/common": "^11.0.5",
