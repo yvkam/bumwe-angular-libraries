@@ -1,14 +1,9 @@
 import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-/**
- * AbstractRestClient class.
- *
- */
 export abstract class AbstractRestClient {
-  protected constructor(
-    protected httpClient: HttpClient
-  ) {}
+
+  protected constructor(protected httpClient: HttpClient) {}
 
   protected getBaseUrl(): string {
     return;

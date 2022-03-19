@@ -2,8 +2,8 @@
   "name": "@bumwe/declarative-rest-client",
   "version": "0.0.2",
   "peerDependencies": {
-    "@angular/common": "^11.0.5",
-    "@angular/core": "^11.0.5",
+    "@angular/common": "^13.3.0",
+    "@angular/core": "^13.3.0",
     "rxjs": "~6.5.4"
   },
   "dependencies": {

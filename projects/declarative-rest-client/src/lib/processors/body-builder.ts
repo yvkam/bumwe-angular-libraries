@@ -1,6 +1,7 @@
 import {ParameterMetadata} from '../decorators/parameters';
 
 export function buildBody(bodyMetadata: ParameterMetadata[], plainBodyMetadata: ParameterMetadata[]) {
+
     const metadata = bodyMetadata || plainBodyMetadata;
     const plain = plainBodyMetadata && plainBodyMetadata.length > 0;
 
