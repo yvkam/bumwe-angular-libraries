@@ -1,12 +1,13 @@
-import {ParameterMetadata} from '../decorators/parameters';
-import {HttpHeaders} from '@angular/common/http';
-import {formatData} from './format-data';
+import { ParameterMetadata } from '../decorators/parameters';
+import { HttpHeaders } from '@angular/common/http';
+import { formatData } from './format-data';
 
-export function buildHeaders(classLevelHeaders,
-                             methodLevelHeaders,
-                             headerMetadata: ParameterMetadata[],
-                             options?: any): HttpHeaders {
-
+export function buildHeaders(
+  classLevelHeaders,
+  methodLevelHeaders,
+  headerMetadata: ParameterMetadata[],
+  options?: any
+): HttpHeaders {
   let headers = new HttpHeaders(classLevelHeaders);
 
   // set method specific Headers
@@ -32,12 +33,11 @@ export function buildHeaders(classLevelHeaders,
 
     if (options.requestAuthHeaders && options.requestAuthHeaders.length > 0) {
       options.requestAuthHeaders
-        .map(t => [t, sessionStorage.getItem(t)])
+        .map((t) => [t, sessionStorage.getItem(t)])
         .filter(([k, v]) => !!v)
-        .forEach(([k, v]) => headers = headers.set(k, v + ''));
+        .forEach(([k, v]) => (headers = headers.set(k, v + '')));
     }
   }
-
 
   // set parameter specific Headers
   if (headerMetadata) {
@@ -48,7 +48,9 @@ export function buildHeaders(classLevelHeaders,
           value = formatData(value, headerMetadata[k].format);
         }
         value = Array.isArray(value) ? value : [value];
-        value.forEach(v => headers = headers.append(headerMetadata[k].key, v + ''));
+        value.forEach(
+          (v) => (headers = headers.append(headerMetadata[k].key, v + ''))
+        );
       }
     }
   }

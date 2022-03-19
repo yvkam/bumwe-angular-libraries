@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
 
-
 @NgModule()
-export class DeclarativeRestClientModule { }
+export class DeclarativeRestClientModule {}

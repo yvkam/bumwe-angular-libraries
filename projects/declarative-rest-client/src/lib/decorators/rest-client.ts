@@ -17,7 +17,7 @@ export function RestClient(options: RestClientArgs) {
     if (options.headers) {
       Target.prototype.getDefaultHeaders = () => options.headers;
     }
-    if ( options.withCredentials ) {
+    if (options.withCredentials) {
       Target.prototype.isWithCredentials = () => options.withCredentials;
     }
     return Target;

@@ -1,4 +1,4 @@
-import {FORMAT} from '../decorators/parameters';
+import { FORMAT } from '../decorators/parameters';
 
 export function formatData(value, format: string) {
   switch (format) {

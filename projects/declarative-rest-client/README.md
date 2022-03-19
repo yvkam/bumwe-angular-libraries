@@ -3,12 +3,15 @@
 [![codecov](https://codecov.io/gh/rosostolato/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/rosostolato/angular-rest-client)
 
 # Update (2019-09-25) - v7.3.2
+
 - PlainQuery can be a full query string separated by '=' or an object of pair key-value
 
 # Update (2019-09-04) - v7.3.0
+
 > **WARNING**: Version 7.3.0 is a big update that can break codes.
 
 On this last build, I...
+
 - fixed some bugs;
 - fixed all spec files and now all tests are passing;
 - `requestInterceptor` can return a observable for async requests
@@ -17,11 +20,12 @@ On this last build, I...
 The reason that I removed `@Produces` is that now the default response will always be `resp.body`. If you still need to get the entire `HttpResponse`, you should use `ResponseInterceptor` method.
 
 # Update (2019-03-26)
+
 - Inserted `PlainQuery` (Query as object)
 - Added `withCredentials` on Client decorator
 
-
 # angular-rest-client
+
 Angular 7 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
 This package is production ready.
 
@@ -30,7 +34,9 @@ This package is production ready.
 ```sh
 yarn add angular7-rest-client
 ```
+
 or
+
 ```sh
 npm install angular7-rest-client --save
 ```
@@ -115,24 +121,21 @@ export class TodoClient extends RestClient {
 
 ### Using it in your component
 
-**```app.module.ts```**
-``` ts
+**`app.module.ts`**
+
+```ts
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    HttpModule
-  ],
-  providers: [
-    TodoClient
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  imports: [HttpModule],
+  providers: [TodoClient],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
 ```
-**```todo.component.ts```**
-``` ts
+
+**`todo.component.ts`**
+
+```ts
 // You need some or all of the following rxjs imports for Promise and Observable.
 import 'rxjs/add/observable/defer'; // deprecated
 import 'rxjs/add/observable/throw'; // deprecated
@@ -171,18 +174,23 @@ export class ToDoCmp {
   }
 }
 ```
+
 ## API Docs
 
 ### RestClient
+
 #### Methods:
+
 - `getServiceId(): string`: returns the serviceId of the RestClient
 - `getBaseUrl(): string`: returns the base url of RestClient
 - `getDefaultHeaders(): Object`: returns the default headers of RestClient in a key-value pair
 
 ### Class decorators:
+
 - `@Client(args:{serviceId?: string, baseUrl?: string, headers?: any, withCredentials?: boolean})`
 
 ### Method decorators:
+
 - `@Get(url: String)`
 - `@Post(url: String)`
 - `@Put(url: String)`
@@ -195,6 +203,7 @@ export class ToDoCmp {
 - `@Timeout(timeout: number)`
 
 ### Parameter decorators:
+
 - `@Path(name: string, options?: string|{defaultValue?:any})`
 - `@Header(name: string, options?: string|{defaultValue?:any, format?:string})`
 - `@Query(name: string, options?: string|{defaultValue?:any, format?:string})`
@@ -203,29 +212,31 @@ export class ToDoCmp {
 - `@Body`
 
 #### Collection Format
-Determines the format of the array if type array is used. (used for ``@Query`` and ``@Header``) Possible values are:
-* ``Format.CSV`` - comma separated values ``foo,bar``.
-* ``Format.SSV`` - space separated values ``foo bar``.
-* ``Format.TSV`` - tab separated values ``foo\tbar``.
-* ``Format.PIPES`` - pipe separated values ``foo|bar``.
-* ``Format.MULTI`` - corresponds to multiple parameter instances instead of multiple values for a single instance ``foo=bar&foo=baz``. This is valid only for parameters in "query" or "formData".
 
-Default value is ``Format.CSV``.
+Determines the format of the array if type array is used. (used for `@Query` and `@Header`) Possible values are:
+
+- `Format.CSV` - comma separated values `foo,bar`.
+- `Format.SSV` - space separated values `foo bar`.
+- `Format.TSV` - tab separated values `foo\tbar`.
+- `Format.PIPES` - pipe separated values `foo|bar`.
+- `Format.MULTI` - corresponds to multiple parameter instances instead of multiple values for a single instance `foo=bar&foo=baz`. This is valid only for parameters in "query" or "formData".
+
+Default value is `Format.CSV`.
 
 # Contributors
 
 Brought to you by many contributors, including:
 
-TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)
+TrustPortal Solutions Ltd [http://trustportal.org](http://trustportal.org)
 Yavin Five
 deblockt
 Dmitry-Gorbenko
-Maxxton Group  [http://www.maxxton.com](http://www.maxxton.com)
+Maxxton Group [http://www.maxxton.com](http://www.maxxton.com)
 Domonkos Pal : Paldom
 Discountrobot
 TN-Kirontech
 LeFinc
-mmrath  [http://www.mmrath.com](http://www.mmrath.com)
+mmrath [http://www.mmrath.com](http://www.mmrath.com)
 steven166
 Mayur Patel : mayur-novus
 

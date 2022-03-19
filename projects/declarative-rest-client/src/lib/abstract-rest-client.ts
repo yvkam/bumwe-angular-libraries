@@ -1,15 +1,14 @@
-import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export abstract class AbstractRestClient {
-
   protected constructor(protected httpClient: HttpClient) {}
 
   protected getBaseUrl(): string {
     return;
   }
 
-  protected getDefaultHeaders(): { [header: string]: string | string[]; } {
+  protected getDefaultHeaders(): { [header: string]: string | string[] } {
     return;
   }
 
@@ -23,7 +22,9 @@ export abstract class AbstractRestClient {
    * @method requestInterceptor
    * @param request - Request object
    */
-  protected requestInterceptor(request: HttpRequest<any>): Observable<HttpRequest<any>> {
+  protected requestInterceptor(
+    request: HttpRequest<any>
+  ): Observable<HttpRequest<any>> {
     return;
   }
 
@@ -34,7 +35,9 @@ export abstract class AbstractRestClient {
    * @param response - response object
    * @returns res - transformed response object
    */
-  protected responseInterceptor(response: HttpResponse<any>): Observable<HttpResponse<any>> {
+  protected responseInterceptor(
+    response: HttpResponse<any>
+  ): Observable<HttpResponse<any>> {
     return;
   }
 }

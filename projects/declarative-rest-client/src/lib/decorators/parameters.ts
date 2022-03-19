@@ -1,4 +1,4 @@
-import {AbstractRestClient} from '../abstract-rest-client';
+import { AbstractRestClient } from '../abstract-rest-client';
 
 export const metadataKeySuffix = {
   pathParam: `_PathParam_parameters`,
@@ -25,26 +25,31 @@ export const QueryParam = paramBuilder(metadataKeySuffix.queryParam);
  * QueryParam value of a method's url,
  * type: key-value pair object or key-value pair string separated by '&'
  */
-export const PlainQuery = paramBuilder(metadataKeySuffix.plainQuery)(metadataKeySuffix.plainQuery);
+export const PlainQuery = paramBuilder(metadataKeySuffix.plainQuery)(
+  metadataKeySuffix.plainQuery
+);
 
 /**
  * Body of a REST method, type: key-value pair object
  * Only one Body per method!
  */
-export const Body = paramBuilder(metadataKeySuffix.body)(metadataKeySuffix.body);
+export const Body = paramBuilder(metadataKeySuffix.body)(
+  metadataKeySuffix.body
+);
 
 /**
  * Body of a REST method, type: key-value pair string separated by '&'
  * Only one Body per method!
  */
-export const PlainBody = paramBuilder(metadataKeySuffix.plainBody)(metadataKeySuffix.plainBody);
+export const PlainBody = paramBuilder(metadataKeySuffix.plainBody)(
+  metadataKeySuffix.plainBody
+);
 
 /**
  * Custom Header of a REST method, type: string
  * @param key - Header key to bind value
  */
 export const Header = paramBuilder(metadataKeySuffix.header);
-
 
 /**
  * collection Formats
@@ -83,19 +88,23 @@ function validateFormat(format: string): string {
   }
 
   if (!FORMAT[format]) {
-    throw new Error('Unknown Collection FORMAT: \'' + format + '\'');
+    throw new Error("Unknown Collection FORMAT: '" + format + "'");
   }
 
   return format;
 }
 
 export function paramBuilder(paramName: string) {
-  return (name?: string, args?: { value?: any, format?: string }) => {
-    return (target: AbstractRestClient, propertyKey: string | symbol, index: number) => {
+  return (name?: string, args?: { value?: any; format?: string }) => {
+    return (
+      target: AbstractRestClient,
+      propertyKey: string | symbol,
+      index: number
+    ) => {
       const value = args?.value;
       const format = validateFormat(args?.format);
       const metadataKey = `${propertyKey as string}${paramName}`;
-      const metadata = { key: name, value, index, format};
+      const metadata = { key: name, value, index, format };
       target[metadataKey] = target[metadataKey] || [];
       target[metadataKey].push(metadata);
     };

@@ -1,10 +1,25 @@
-import {Observable, of} from 'rxjs';
-import {AbstractRestClient} from '../abstract-rest-client';
-import {HttpClient, HttpHeaders, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Delete, Get, Head, Options, Patch, Post, Put, Request, RequestMethod, Trace} from './request-methods';
+import { Observable, of } from 'rxjs';
+import { AbstractRestClient } from '../abstract-rest-client';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
+import {
+  Delete,
+  Get,
+  Head,
+  Options,
+  Patch,
+  Post,
+  Put,
+  Request,
+  RequestMethod,
+  Trace,
+} from './request-methods';
 
 describe('@Get', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -24,7 +39,6 @@ describe('@Get', () => {
 });
 
 describe('@Post', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -44,7 +58,6 @@ describe('@Post', () => {
 });
 
 describe('@Put', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -64,7 +77,6 @@ describe('@Put', () => {
 });
 
 describe('@Patch', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -84,7 +96,6 @@ describe('@Patch', () => {
 });
 
 describe('@Delete', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -104,7 +115,6 @@ describe('@Delete', () => {
 });
 
 describe('@Trace', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -124,7 +134,6 @@ describe('@Trace', () => {
 });
 
 describe('@Head', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -144,7 +153,6 @@ describe('@Head', () => {
 });
 
 describe('@Options', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -164,7 +172,6 @@ describe('@Options', () => {
 });
 
 describe('@Request', () => {
-
   it('verify Request method is set', () => {
     // Arrange
     let method;
@@ -202,7 +209,12 @@ describe('@Request', () => {
     let headers: HttpHeaders;
     const requestMock = new HttpMock((req: HttpRequest<any>) => {
       headers = req.headers;
-      return of(new HttpResponse<any>({body: 'Body', headers: new HttpHeaders({jwt2: '2'})}));
+      return of(
+        new HttpResponse<any>({
+          body: 'Body',
+          headers: new HttpHeaders({ jwt2: '2' }),
+        })
+      );
     });
     const testClient = new TestClient(requestMock);
     Object.defineProperty(window, 'sessionStorage', {
@@ -214,10 +226,9 @@ describe('@Request', () => {
           },
           setItem(key, value) {
             store[key] = value.toString();
-          }
+          },
         };
-      })()
-
+      })(),
     });
 
     sessionStorage.setItem('jwt1', '1');
@@ -232,24 +243,30 @@ describe('@Request', () => {
 });
 
 class HttpMock extends HttpClient {
-
   public callCount = 0;
   public lastRequest: HttpRequest<any>;
 
-  constructor(private requestFunction: (req: HttpRequest<any>) => Observable<HttpResponse<any>>) {
+  constructor(
+    private requestFunction: (
+      req: HttpRequest<any>
+    ) => Observable<HttpResponse<any>>
+  ) {
     super(null);
   }
 
-  request(req: HttpRequest<any> | any, p2?: any, p3?: any, p4?: any): Observable<any> {
+  request(
+    req: HttpRequest<any> | any,
+    p2?: any,
+    p3?: any,
+    p4?: any
+  ): Observable<any> {
     this.callCount++;
     this.lastRequest = req;
     return this.requestFunction(req);
   }
-
 }
 
 class TestClient extends AbstractRestClient {
-
   constructor(httpHandler: HttpClient) {
     super(httpHandler);
   }
@@ -265,7 +282,7 @@ class TestClient extends AbstractRestClient {
     consumes: ['text/html'],
     produces: ['application/json'],
     requestAuthHeaders: ['jwt1'],
-    responseAuthHeaders: ['jwt2']
+    responseAuthHeaders: ['jwt2'],
   })
   public getItems1(): Observable<HttpResponse<any>> {
     return;
@@ -305,5 +322,4 @@ class TestClient extends AbstractRestClient {
   public traceItems(): Observable<HttpResponse<any>> {
     return;
   }
-
 }

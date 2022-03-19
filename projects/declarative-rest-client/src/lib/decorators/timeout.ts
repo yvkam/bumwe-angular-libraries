@@ -5,7 +5,7 @@ import { AbstractRestClient } from '../abstract-rest-client';
  * @param  value - The timeout duration in milliseconds.
  */
 export function timeout(value: number) {
-  return (target: AbstractRestClient, propertyKey: string, descriptor: any ) => {
+  return (target: AbstractRestClient, propertyKey: string, descriptor: any) => {
     descriptor.timeout = timeout;
     return descriptor;
   };

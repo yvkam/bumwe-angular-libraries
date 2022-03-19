@@ -1,6 +1,10 @@
-import {ParameterMetadata} from '../decorators/parameters';
+import { ParameterMetadata } from '../decorators/parameters';
 
-export function buildUrl(baseUrl: string, path: string, pathParamsMetadata: ParameterMetadata[]) {
+export function buildUrl(
+  baseUrl: string,
+  path: string,
+  pathParamsMetadata: ParameterMetadata[]
+) {
   const urlTemplate = buildFullUrlTemplate(baseUrl, path);
   return replacePathParams(urlTemplate, pathParamsMetadata);
 }
@@ -19,9 +23,12 @@ function buildFullUrlTemplate(baseUrl: string, path: string) {
 
   return baseUrl + path;
 }
-function replacePathParams(urlTemplate: string, metadata: ParameterMetadata[]): string {
+function replacePathParams(
+  urlTemplate: string,
+  metadata: ParameterMetadata[]
+): string {
   let url = urlTemplate;
-  metadata?.forEach(md => url = replacePathParam(url, md.key, md.value));
+  metadata?.forEach((md) => (url = replacePathParam(url, md.key, md.value)));
   return url;
 }
 
